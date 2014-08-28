@@ -1,0 +1,30 @@
+{
+    "name":"yosymfony/resource-watcher",
+    "description": "A simple resource watcher using Symfony Finder",
+    "keywords": ["resources","watcher","finder","symfony"],
+    "license": "MIT",
+    "homepage": "http://yosymfony.com",
+    "authors": [
+        {
+            "name": "Victor Puertas",
+            "email": "vpgugr@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "symfony/finder": "~2.4"
+    },
+    "require-dev": {
+        "symfony/filesystem": "~2.4"  
+    },
+    "autoload": {
+        "psr-4": {
+            "Yosymfony\\ResourceWatcher\\": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}
