@@ -1,4 +1,7 @@
-A simple resource watcher for getting changes in your filesystem.
+A simple resource watcher for getting changes of your filesystem.
+
+[![Build Status](https://travis-ci.org/yosymfony/Resource-watcher.png?branch=master)](https://travis-ci.org/yosymfony/Resource-watcher)
+[![Latest Stable Version](https://poser.pugx.org/yosymfony/resource-watcher/v/stable.png)](https://packagist.org/packages/yosymfony/resource-watcher)
 
 ## How to use?
 
@@ -35,10 +38,25 @@ $rw->findChanges();
 $rw->getDeteledResources() // array with pathname of deleted files
 ```
 
+## finding changes
+
+Every time that you call `findChanges()` from `ResourceWatcher` you are getting the changes
+producced by your filesystem. The resources changed can be recovered with these methods:
+
+* `getNewResources()`: Return an array with the paths of the new resources.
+* `getDeteledResources()`: Return an array with the paths of deleted resources.
+* `getUpdatedResources()`: Return an array with the paths of the updated resources.
+
+## Rebuild cache
+
+To rebuild the resource cache uses `rebuild()` method from `ResourceWatcher`.
+
 ## Unit tests
 
 You can run the unit tests with the following command:
 
-    $ cd your-path/vendor/yosymfony/resource-watcher
-    $ composer.phar install --dev
-    $ phpunit
+```bash
+$ cd your-path/vendor/yosymfony/resource-watcher
+$ composer.phar install --dev
+$ phpunit
+```
