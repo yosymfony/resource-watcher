@@ -162,9 +162,9 @@ class ResourceWatcherTest extends \PHPUnit_Framework_TestCase
         $newResources = $rw->getNewResources();
         
         $this->assertCount(3, $newResources);
-        $this->assertEquals($this->tmpDir . '/file1.txt', $newResources[0]);
-        $this->assertEquals($this->tmpDir . '/file2.txt', $newResources[1]);
-        $this->assertEquals($this->tmpDir . '/file3.txt', $newResources[2]);
+        $this->assertContains($this->tmpDir . '/file1.txt', $newResources);
+        $this->assertContains($this->tmpDir . '/file2.txt', $newResources);
+        $this->assertContains($this->tmpDir . '/file3.txt', $newResources);
         
         // ---
         
