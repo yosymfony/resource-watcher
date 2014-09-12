@@ -3,6 +3,20 @@ A simple resource watcher for getting changes of your filesystem.
 [![Build Status](https://travis-ci.org/yosymfony/Resource-watcher.png?branch=master)](https://travis-ci.org/yosymfony/Resource-watcher)
 [![Latest Stable Version](https://poser.pugx.org/yosymfony/resource-watcher/v/stable.png)](https://packagist.org/packages/yosymfony/resource-watcher)
 
+## Installation
+
+Use [Composer](http://getcomposer.org/) to install `resource-watcher` package:
+
+Add the following to your `composer.json` and run `composer update`.
+
+```json
+"require": {
+    "yosymfony/resource-watcher": "1.0.x-dev"
+}
+```
+
+More information about the package on [Packagist](https://packagist.org/packages/yosymfony/resource-watcher).
+
 ## How to use?
 
 This component uses [Symfony Finder](http://symfony.com/doc/current/components/finder.html) 
