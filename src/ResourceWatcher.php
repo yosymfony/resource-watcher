@@ -123,7 +123,7 @@ class ResourceWatcher
     {
         $this->newResources = [];
         $this->deletedResources = [];
-        $this->updateResources = [];
+        $this->updatedResources = [];
     }
     
     private function warmUpResourceCache()
