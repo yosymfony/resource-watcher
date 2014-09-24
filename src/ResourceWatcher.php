@@ -75,7 +75,7 @@ class ResourceWatcher
      */
     public function hasChanges()
     {
-        return count($this->newResources) > 0 || count($this->deletedResources) > 0 || count($this->updateResources) > 0;
+        return count($this->newResources) > 0 || count($this->deletedResources) > 0 || count($this->updatedResources) > 0;
     }
     
     /**
