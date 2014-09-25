@@ -23,6 +23,7 @@ class ResourceWatcher
 {
     private $rc;
     private $finder;
+    private $isSearchingChanges = false;
     private $resourcesFinder = [];
     private $newResources = [];
     private $deletedResources = [];
@@ -54,6 +55,13 @@ class ResourceWatcher
      */
     public function findChanges()
     {
+        if($this->isSearchingChanges)
+        {
+            return;
+        }
+        
+        $this->isSearchingChanges = true;
+        
         $this->reset();
         
         if(false == $this->rc->isInitialized())
@@ -66,6 +74,18 @@ class ResourceWatcher
         }
         
         $this->rc->save();
+        
+        $this->isSearchingChanges = false;
+    }
+    
+    /**
+     * Is searching changes?
+     * 
+     * @return bool
+     */
+    public function isSearching()
+    {
+        return $this->isSearchingChanges;
     }
     
     /**

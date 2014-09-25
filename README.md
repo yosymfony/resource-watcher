@@ -61,6 +61,7 @@ producced by your filesystem. The resources changed can be recovered with these 
 * `getDeteledResources()`: Return an array with the paths of deleted resources.
 * `getUpdatedResources()`: Return an array with the paths of the updated resources.
 * `hasChanges()`: Has changes in your resources?.
+* `isSearching()`: Is searching changes in your resources?.
 
 ## Rebuild cache
 
