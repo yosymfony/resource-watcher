@@ -36,7 +36,7 @@ $finder->files()
 
 $rc = new ResourceCacheFile('/path-to-cache-file.php');
 
-$rw = new ResourceWatcher($c);
+$rw = new ResourceWatcher($rc);
 $rw->setFinder($finder);
 
 $rw->findChanges();
