@@ -42,14 +42,14 @@ $rw->setFinder($finder);
 $rw->findChanges();
 
 $rw->getNewResources()
-$rw->getDeteledResources()
+$rw->getDeletedResources()
 $rw->getUpdatedResources()
 
 // delete a file
 
 $rw->findChanges();
 
-$rw->getDeteledResources() // array with pathname of deleted files
+$rw->getDeletedResources() // array with pathname of deleted files
 ```
 
 ## finding changes
