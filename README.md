@@ -11,7 +11,7 @@ Add the following to your `composer.json` and run `composer update`.
 
 ```json
 "require": {
-    "yosymfony/resource-watcher": "1.0.x-dev"
+    "yosymfony/resource-watcher": "1.1.x-dev"
 }
 ```
 
