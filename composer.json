@@ -12,10 +12,10 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "symfony/finder": "2.6.*@dev"
+        "symfony/finder": "2.7.*"
     },
     "require-dev": {
-        "symfony/filesystem": "2.6.*@dev"  
+        "symfony/filesystem": "2.7.*"  
     },
     "autoload": {
         "psr-4": {
@@ -24,7 +24,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0-dev"
+            "dev-master": "1.1-dev"
         }
     }
 }
