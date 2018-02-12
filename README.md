@@ -1,25 +1,19 @@
 A simple resource watcher for getting changes of your filesystem.
 
-[![Build Status](https://travis-ci.org/yosymfony/Resource-watcher.png?branch=master)](https://travis-ci.org/yosymfony/Resource-watcher)
+[![Build Status](https://travis-ci.org/yosymfony/resource-watcher.png?branch=master)](https://travis-ci.org/yosymfony/resource-watcher)
 [![Latest Stable Version](https://poser.pugx.org/yosymfony/resource-watcher/v/stable.png)](https://packagist.org/packages/yosymfony/resource-watcher)
 
 ## Installation
 
-Use [Composer](http://getcomposer.org/) to install `resource-watcher` package:
+Use [Composer](http://getcomposer.org/) to install this package:
 
-Add the following to your `composer.json` and run `composer update`.
-
-```json
-"require": {
-    "yosymfony/resource-watcher": "1.1.x-dev"
-}
+```bash
+composer require yosymfony/resource-watcher
 ```
-
-More information about the package on [Packagist](https://packagist.org/packages/yosymfony/resource-watcher).
 
 ## How to use?
 
-This component uses [Symfony Finder](http://symfony.com/doc/current/components/finder.html) 
+This package uses [Symfony Finder](http://symfony.com/doc/current/components/finder.html) 
 for setting the criteria for finding resources.
 
 ```php
@@ -55,7 +49,7 @@ $rw->getDeletedResources() // array with pathname of deleted files
 ## finding changes
 
 Every time that you call `findChanges()` from `ResourceWatcher` you are getting the changes
-producced by your filesystem. The resources changed can be recovered with these methods:
+producced by your filesystem. The resources changed can be recovered with following methods:
 
 * `getNewResources()`: Return an array with the paths of the new resources.
 * `getDeteledResources()`: Return an array with the paths of deleted resources.
