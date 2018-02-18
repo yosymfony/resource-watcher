@@ -13,7 +13,7 @@ namespace Yosymfony\ResourceWatcher;
 
 /**
  * Resource cache implementation using PHP file with an array
- * 
+ *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
 class ResourceCacheFile extends ResourceCacheMemory
@@ -23,7 +23,7 @@ class ResourceCacheFile extends ResourceCacheMemory
     
     /**
      * Constructor
-     * 
+     *
      * @param string $filename PHP filename
      */
     public function __construct($filename)
@@ -32,13 +32,10 @@ class ResourceCacheFile extends ResourceCacheMemory
         
         $cacheContent = $this->readCacheFile($this->filename);
         
-        if($cacheContent)
-        {
+        if ($cacheContent) {
             $this->data = $cacheContent;
             $this->isInitialized = true;
-        }
-        else
-        {
+        } else {
             $this->hasPendingChasges = true;
         }
     }
@@ -48,8 +45,7 @@ class ResourceCacheFile extends ResourceCacheMemory
      */
     public function write($resourceName, $timestamp)
     {
-        if($timestamp == $this->read($resourceName))
-        {
+        if ($timestamp == $this->read($resourceName)) {
             return;
         }
         
@@ -64,8 +60,7 @@ class ResourceCacheFile extends ResourceCacheMemory
      */
     public function save()
     {
-        if(false == $this->hasPendingChasges)
-        {
+        if (false == $this->hasPendingChasges) {
             return;
         }
         
@@ -74,25 +69,21 @@ class ResourceCacheFile extends ResourceCacheMemory
         $this->hasPendingChasges = false;
         $this->isInitialized = true;
         
-        if (false === @file_put_contents($this->filename, $content))
-        {
+        if (false === @file_put_contents($this->filename, $content)) {
             throw new \RuntimeException(sprintf('Failed to write file "%s".', $this->filename));
         }
     }
     
     private function readCacheFile($filename)
     {
-        if(false == preg_match('#\.php$#', $filename))
-        {
+        if (false == preg_match('#\.php$#', $filename)) {
             throw new \InvalidArgumentException('The cache filename must ends with php extension');
         }
         
-        if(file_exists($filename))
-        {
+        if (file_exists($filename)) {
             $content = include_once($filename);
             
-            if(is_array($content))
-            {
+            if (is_array($content)) {
                 return $content;
             }
         }
@@ -102,8 +93,7 @@ class ResourceCacheFile extends ResourceCacheMemory
     {
         $data = '';
         
-        foreach($resources as $resourceName => $timestamp)
-        {
+        foreach ($resources as $resourceName => $timestamp) {
             $data .= sprintf('\'%s\'=>%s,', $resourceName, $timestamp);
         }
         

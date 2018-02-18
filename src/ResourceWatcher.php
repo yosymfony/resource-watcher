@@ -16,7 +16,7 @@ use Symfony\Component\Finder\Finder;
 /**
  * A simple resource-watcher for getting changes in resources of filesystem.
  * This component uses Symfony Finder for setting the criteria for finding resources.
- * 
+ *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
 class ResourceWatcher
@@ -31,7 +31,7 @@ class ResourceWatcher
     
     /**
      * Constructor
-     * 
+     *
      * @param ResourceCacheInterface $resourceCache
      */
     public function __construct(ResourceCacheInterface $resourceCache)
@@ -41,7 +41,7 @@ class ResourceWatcher
     
     /**
      * Set the Finder
-     * 
+     *
      * @param Finder $finder
      */
     public function setFinder(Finder $finder)
@@ -55,8 +55,7 @@ class ResourceWatcher
      */
     public function findChanges()
     {
-        if($this->isSearchingChanges)
-        {
+        if ($this->isSearchingChanges) {
             return;
         }
         
@@ -64,12 +63,9 @@ class ResourceWatcher
         
         $this->reset();
         
-        if(false == $this->rc->isInitialized())
-        {
+        if (false == $this->rc->isInitialized()) {
             $this->warmUpResourceCache();
-        }
-        else
-        {
+        } else {
             $this->findChangesAgainstCache();
         }
         
@@ -80,7 +76,7 @@ class ResourceWatcher
     
     /**
      * Is searching changes?
-     * 
+     *
      * @return bool
      */
     public function isSearching()
@@ -90,7 +86,7 @@ class ResourceWatcher
     
     /**
      * Has changes in your resources?
-     * 
+     *
      * @return bool
      */
     public function hasChanges()
@@ -100,7 +96,7 @@ class ResourceWatcher
     
     /**
      * Get an array with path to the new resources ('.', '..' not resolved).
-     * 
+     *
      * @return array
      */
     public function getNewResources()
@@ -110,7 +106,7 @@ class ResourceWatcher
     
     /**
      * Get an array with path of deleted resources ('.', '..' not resolved).
-     * 
+     *
      * @return array
      */
     public function getDeletedResources()
@@ -120,7 +116,7 @@ class ResourceWatcher
     
     /**
      * Get an array with path to the updated resources ('.', '..' not resolved).
-     * 
+     *
      * @return array
      */
     public function getUpdatedResources()
@@ -148,8 +144,7 @@ class ResourceWatcher
     
     private function warmUpResourceCache()
     {
-        foreach ($this->finder as $resource)
-        {
+        foreach ($this->finder as $resource) {
             $this->rc->write($resource->getPathname(), $resource->getMTime());
         }
     }
@@ -161,17 +156,12 @@ class ResourceWatcher
         $resourcesFs = $this->resourcesFinder;
         $resourcesCache = $this->rc->getResources();
         
-        if(count($resourcesFs) > count($resourcesCache))
-        {
-            foreach($resourcesFs as $resourceFs => $timestampFs)
-            {
+        if (count($resourcesFs) > count($resourcesCache)) {
+            foreach ($resourcesFs as $resourceFs => $timestampFs) {
                 $this->processResourceFs($resourceFs, $timestampFs);
             }
-        }
-        else
-        {
-            foreach($resourcesCache as $resourceCache => $timestampCache)
-            {
+        } else {
+            foreach ($resourcesCache as $resourceCache => $timestampCache) {
                 $this->processResourceCache($resourceCache, $timestampCache);
             }
         }
@@ -181,16 +171,12 @@ class ResourceWatcher
     {
         $timestampCache = $this->rc->read($resourceFs);
         
-        if($timestampCache)
-        {
-            if($timestampFs > $timestampCache)
-            {
+        if ($timestampCache) {
+            if ($timestampFs > $timestampCache) {
                 $this->rc->write($resourceFs, $timestampFs);
                 $this->updatedResources[] = $resourceFs;
             }
-        }
-        else
-        {
+        } else {
             $this->rc->write($resourceFs, $timestampFs);
             $this->newResources[] = $resourceFs;
         }
@@ -200,16 +186,12 @@ class ResourceWatcher
     {
         $timestampFs = isset($this->resourcesFinder[$resourceCache]) ? $this->resourcesFinder[$resourceCache] : null;
         
-        if($timestampFs)
-        {
-            if($timestampFs > $timestampCache)
-            {
+        if ($timestampFs) {
+            if ($timestampFs > $timestampCache) {
                 $this->rc->write($resourceCache, $timestampFs);
                 $this->updatedResources[] = $resourceCache;
             }
-        }
-        else
-        {
+        } else {
             $this->rc->delete($resourceCache);
             $this->deletedResources[] = $resourceCache;
         }
@@ -219,8 +201,7 @@ class ResourceWatcher
     {
         $paths = [];
         
-        foreach ($this->finder as $resource)
-        {
+        foreach ($this->finder as $resource) {
             clearstatcache();
             $paths[$resource->getPathname()] = $resource->getMTime();
         }

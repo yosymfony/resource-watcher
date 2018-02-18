@@ -13,30 +13,30 @@ namespace Yosymfony\ResourceWatcher;
 
 /**
  * Interface for ResourceCache objects
- * 
+ *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
 interface ResourceCacheInterface
 {
     /**
      * If cache isInitialized? if not then warm-up cache
-     * 
+     *
      * @return bool
      */
     public function isInitialized();
     
     /**
      * Get the timestamp of a resource
-     * 
+     *
      * @param string $resourceName
-     * 
+     *
      * @return int | null if not exists
      */
     public function read($resourceName);
     
     /**
      * Write or update a resource
-     * 
+     *
      * @param string $resourceName
      * @param int $timestamp
      */
@@ -44,7 +44,7 @@ interface ResourceCacheInterface
     
     /**
      * Delete a resource
-     * 
+     *
      * @param string $resourceName
      */
     public function delete($resourceName);
@@ -56,7 +56,7 @@ interface ResourceCacheInterface
     
     /**
      * Return an array of items with resource-name as key and timestamp as value
-     * 
+     *
      * @return array
      */
     public function getResources();

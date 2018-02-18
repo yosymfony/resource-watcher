@@ -13,7 +13,7 @@ namespace Yosymfony\ResourceWatcher;
 
 /**
  * Resource cache implementation using memory as temporal store
- * 
+ *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
 class ResourceCacheMemory implements ResourceCacheInterface
