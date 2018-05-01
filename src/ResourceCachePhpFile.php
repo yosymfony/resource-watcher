@@ -12,11 +12,11 @@
 namespace Yosymfony\ResourceWatcher;
 
 /**
- * Resource cache implementation using PHP file with an array
+ * Resource cache implementation using a PHP file with an array.
  *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
-class ResourceCacheFile extends ResourceCacheMemory
+class ResourceCachePhpFile extends ResourceCacheMemory
 {
     protected $filename;
     protected $hasPendingChasges = false;
@@ -24,7 +24,7 @@ class ResourceCacheFile extends ResourceCacheMemory
     /**
      * Constructor.
      *
-     * @param string $filename The cache ".PHP" file. E.g: cache.php
+     * @param string $filename The cache ".PHP" file. E.g: "resource-watcher-cache.php"
      */
     public function __construct($filename)
     {
@@ -70,14 +70,14 @@ class ResourceCacheFile extends ResourceCacheMemory
         $this->isInitialized = true;
 
         if (false === @file_put_contents($this->filename, $content)) {
-            throw new \RuntimeException(sprintf('Failed to write file "%s".', $this->filename));
+            throw new \RuntimeException(sprintf('Failed to write the file "%s".', $this->filename));
         }
     }
 
     private function readCacheFile($filename)
     {
         if (false == preg_match('#\.php$#', $filename)) {
-            throw new \InvalidArgumentException('The cache filename must ends with php extension.');
+            throw new \InvalidArgumentException('The cache filename must ends with the extension ".php".');
         }
 
         if (file_exists($filename)) {

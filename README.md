@@ -20,7 +20,7 @@ to set the criteria to discover file changes.
 use Symfony\Component\Finder\Finder;
 use Yosymfony\ResourceWatcher\Crc32ContentHash;
 use Yosymfony\ResourceWatcher\ResourceWatcher;
-use Yosymfony\ResourceWatcher\ResourceCacheFile;
+use Yosymfony\ResourceWatcher\ResourceCachePhpFile;
 
 $finder = new Finder();
 $finder->files()
@@ -29,7 +29,7 @@ $finder->files()
     ->in(__DIR__);
 
 $hashContent = new Crc32ContentHash();
-$resourceCache = new ResourceCacheFile('/path-to-cache-file.php');
+$resourceCache = new ResourceCachePhpFile('/path-to-cache-file.php');
 $watcher = new ResourceWatcher($resourceCache, $finder, $hashContent);
 $watcher->initialize();
 

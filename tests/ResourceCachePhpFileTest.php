@@ -12,9 +12,9 @@
 namespace Yosymfony\ResourceWatcher\Tests;
 
 use Symfony\Component\Filesystem\Filesystem;
-use Yosymfony\ResourceWatcher\ResourceCacheFile;
+use Yosymfony\ResourceWatcher\ResourceCachePhpFile;
 
-class ResourceCacheFileTest extends \PHPUnit_Framework_TestCase
+class ResourceCachePhpFileTest extends \PHPUnit_Framework_TestCase
 {
     protected $tmpDir;
     protected $fs;
@@ -34,11 +34,11 @@ class ResourceCacheFileTest extends \PHPUnit_Framework_TestCase
 
     public function testCreate()
     {
-        $rc = new ResourceCacheFile($this->tmpDir . '/cache-file-test.php');
+        $rc = new ResourceCachePhpFile($this->tmpDir . '/cache-file-test.php');
 
         $this->assertFalse($rc->isInitialized());
 
-        $rc = new ResourceCacheFile($this->tmpDir . '/cache-file-test.php');
+        $rc = new ResourceCachePhpFile($this->tmpDir . '/cache-file-test.php');
         $rc->save();
 
         $this->assertTrue($rc->isInitialized());
@@ -46,12 +46,12 @@ class ResourceCacheFileTest extends \PHPUnit_Framework_TestCase
 
     public function testSaveResources()
     {
-        $rc = new ResourceCacheFile($this->tmpDir . '/cache-file-test.php');
+        $rc = new ResourceCachePhpFile($this->tmpDir . '/cache-file-test.php');
         $rc->write('/resource-1/file1.txt', 3455345);
         $rc->write('/resource-1/file2.txt', 945635);
         $rc->save();
 
-        $rc = new ResourceCacheFile($this->tmpDir . '/cache-file-test.php');
+        $rc = new ResourceCachePhpFile($this->tmpDir . '/cache-file-test.php');
 
         $this->assertCount(2, $rc->getResources());
         $this->assertEquals(945635, $rc->read('/resource-1/file2.txt'));
@@ -62,6 +62,6 @@ class ResourceCacheFileTest extends \PHPUnit_Framework_TestCase
      */
     public function testNoPhpFile()
     {
-        $rc = new ResourceCacheFile($this->tmpDir . '/cache-file-test.txt');
+        $rc = new ResourceCachePhpFile($this->tmpDir . '/cache-file-test.txt');
     }
 }
