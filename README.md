@@ -31,21 +31,20 @@ $finder->files()
 $hashContent = new Crc32ContentHash();
 $resourceCache = new ResourceCacheFile('/path-to-cache-file.php');
 $watcher = new ResourceWatcher($resourceCache, $finder, $hashContent);
-
-$watcher->findChanges();
+$watcher->initialize();
 
 // delete a file
 
 $result = $watcher->findChanges();
 
-$result->getDeletedResources() // array with the filename of deleted files. e.g: "/home/yosymfony/README.md"
+$result->getDeletedResources() // array of deleted filenames. e.g: "/home/yosymfony/README.md"
 ```
 
 ## Finding changes
 
 Every time the method `findChanges()` from the class `ResourceWatcher` is invoked,
 it returns an object type `ResourceWatcherResult` with information about the
-changes producced by the filesystem. The `ResourceWatcherResult` class has the following methods:
+changes producced in the filesystem. The `ResourceWatcherResult` class has the following methods:
 
 * `getNewFiles()`: Return an array with the paths of the new resources.
 * `getDeteledFiles()`: Return an array with the paths of deleted resources.

@@ -35,6 +35,20 @@ class ResourceWatcherTest extends \PHPUnit_Framework_TestCase
         $this->fs->remove($this->tmpDir);
     }
 
+    public function testInitializeMustWarmUpTheCacheInCaseItIsCold()
+    {
+        $finder = new Finder();
+        $finder->files()
+            ->name('*.txt')
+            ->in($this->tmpDir);
+        $cacheMemory = new ResourceCacheMemory();
+        $contentHashCrc32 = new Crc32ContentHash();
+        $resourceWatcher = new ResourceWatcher($cacheMemory, $finder, $contentHashCrc32);
+        $resourceWatcher->initialize();
+
+        $this->assertTrue($cacheMemory->isInitialized());
+    }
+
     public function testHasChangesMustReturnFalseWithColdCache()
     {
         $finder = new Finder();

@@ -44,13 +44,27 @@ class ResourceWatcher
     }
 
     /**
+     * Initializes the resource watcher.
+     *
+     * @return void
+     */
+    public function initialize()
+    {
+        if ($this->cache->isInitialized() == false) {
+            $this->findChanges();
+        }
+    }
+
+    /**
      * Finds all changes in the filesystem according to the finder criteria.
+     *
+     * @return ResourceWatcherResult
      */
     public function findChanges()
     {
         $this->reset();
 
-        if (false == $this->cache->isInitialized()) {
+        if ($this->cache->isInitialized() == false) {
             $this->warmUpCache();
         } else {
             $this->findChangesAgainstCache();
@@ -62,7 +76,9 @@ class ResourceWatcher
     }
 
     /**
-     * Rebuild the resource cache
+     * Rebuilds the resource cache
+     *
+     * @return void
      */
     public function rebuild()
     {
@@ -72,6 +88,9 @@ class ResourceWatcher
         $this->cache->save();
     }
 
+    /**
+     * @return void
+     */
     private function reset()
     {
         $this->newFiles = [];
@@ -79,6 +98,9 @@ class ResourceWatcher
         $this->updatedFiles = [];
     }
 
+    /**
+     * @return void
+     */
     private function warmUpCache()
     {
         foreach ($this->finder as $file) {
@@ -87,6 +109,9 @@ class ResourceWatcher
         }
     }
 
+    /**
+     * @return void
+     */
     private function findChangesAgainstCache()
     {
         $this->calculateHashOfFilesFromFinder();
@@ -105,6 +130,12 @@ class ResourceWatcher
         }
     }
 
+    /**
+     * @param string $file asdfasdf
+     * @param string $hash
+     *
+     * @return void
+     */
     private function processFileFromFilesystem($file, $hash)
     {
         $hashFromCache = $this->cache->read($file);
@@ -120,6 +151,9 @@ class ResourceWatcher
         }
     }
 
+    /**
+     * @return void
+     */
     private function processFileFromCache($file, $hash)
     {
         $hashFromCache = isset($this->fileHashesFromFinder[$file]) ? $this->fileHashesFromFinder[$file] : null;
@@ -135,6 +169,9 @@ class ResourceWatcher
         }
     }
 
+    /**
+     * @return void
+     */
     private function calculateHashOfFilesFromFinder()
     {
         $pathsAndHashes = [];
@@ -147,6 +184,9 @@ class ResourceWatcher
         $this->fileHashesFromFinder = $pathsAndHashes;
     }
 
+    /**
+     * @return string
+     */
     private function calculateHashOfFile($filename)
     {
         $fileContent = file_get_contents($filename);
