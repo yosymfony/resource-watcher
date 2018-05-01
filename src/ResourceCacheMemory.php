@@ -1,18 +1,18 @@
 <?php
 
 /*
- * This file is part of the Yosymfony\ResourceWatcher.
+ * This file is part of the Yo! Symfony Resource Watcher.
  *
  * (c) YoSymfony <http://github.com/yosymfony>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 namespace Yosymfony\ResourceWatcher;
 
 /**
- * Resource cache implementation using memory as temporal store
+ * Resource cache implementation using memory as a temporal store.
  *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
@@ -20,7 +20,7 @@ class ResourceCacheMemory implements ResourceCacheInterface
 {
     protected $isInitialized = false;
     protected $data = [];
-    
+
     /**
      * {@inheritdoc}
      */
@@ -28,31 +28,31 @@ class ResourceCacheMemory implements ResourceCacheInterface
     {
         return $this->isInitialized;
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    public function read($resourceName)
+    public function read($filename)
     {
-        return isset($this->data[$resourceName]) ? $this->data[$resourceName] : null;
+        return isset($this->data[$filename]) ? $this->data[$filename] : '';
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    public function write($resourceName, $timestamp)
+    public function write($filename, $hash)
     {
-        $this->data[$resourceName] = $timestamp;
+        $this->data[$filename] = $hash;
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    public function delete($resourceName)
+    public function delete($filename)
     {
-        unset($this->data[$resourceName]);
+        unset($this->data[$filename]);
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -60,7 +60,7 @@ class ResourceCacheMemory implements ResourceCacheInterface
     {
         $this->data = [];
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -68,7 +68,7 @@ class ResourceCacheMemory implements ResourceCacheInterface
     {
         return $this->data;
     }
-    
+
     /**
      * {@inheritdoc}
      */

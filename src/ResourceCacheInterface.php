@@ -1,68 +1,68 @@
 <?php
 
 /*
- * This file is part of the Yosymfony\ResourceWatcher.
+ * This file is part of the Yo! Symfony Resource Watcher.
  *
  * (c) YoSymfony <http://github.com/yosymfony>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 namespace Yosymfony\ResourceWatcher;
 
 /**
- * Interface for ResourceCache objects
+ * Interface of a resource cache.
  *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
 interface ResourceCacheInterface
 {
     /**
-     * If cache isInitialized? if not then warm-up cache
+     * If the cache Initialized? if not then warm-up cache.
      *
      * @return bool
      */
     public function isInitialized();
-    
+
     /**
-     * Get the timestamp of a resource
+     * Returns the hash of a file in cache.
      *
-     * @param string $resourceName
+     * @param string $filename
      *
-     * @return int | null if not exists
+     * @return string The hash for the filename. Empty string if not exists.
      */
-    public function read($resourceName);
-    
+    public function read($filename);
+
     /**
-     * Write or update a resource
+     * Updates the hash of a file in cache.
      *
-     * @param string $resourceName
-     * @param int $timestamp
+     * @param string $filename
+     * @param string $hash The calculated hash for the filename.
      */
-    public function write($resourceName, $timestamp);
-    
+    public function write($filename, $hash);
+
     /**
-     * Delete a resource
+     * Deletes a file in cache.
      *
-     * @param string $resourceName
+     * @param string $filename
      */
-    public function delete($resourceName);
-    
+    public function delete($filename);
+
     /**
-     * Erase all elements in cache
+     * Erases all the elements in cache.
      */
     public function erase();
-    
+
     /**
-     * Return an array of items with resource-name as key and timestamp as value
+     * Returns an array of key-values with the file as key and the hash as value.
      *
      * @return array
      */
     public function getResources();
-    
+
     /**
-     * Persist the cache
+     * Persists the cache
      */
     public function save();
 }

@@ -13,11 +13,12 @@ composer require yosymfony/resource-watcher
 
 ## How to use?
 
-This package uses [Symfony Finder](http://symfony.com/doc/current/components/finder.html) 
-for setting the criteria for finding resources.
+This package uses [Symfony Finder](http://symfony.com/doc/current/components/finder.html)
+to set the criteria to discover file changes.
 
 ```php
 use Symfony\Component\Finder\Finder;
+use Yosymfony\ResourceWatcher\Crc32ContentHash;
 use Yosymfony\ResourceWatcher\ResourceWatcher;
 use Yosymfony\ResourceWatcher\ResourceCacheFile;
 
@@ -25,37 +26,31 @@ $finder = new Finder();
 $finder->files()
     ->name('*.php')
     ->depth(0)
-    ->size('>= 1K')
     ->in(__DIR__);
 
-$rc = new ResourceCacheFile('/path-to-cache-file.php');
+$hashContent = new Crc32ContentHash();
+$resourceCache = new ResourceCacheFile('/path-to-cache-file.php');
+$watcher = new ResourceWatcher($resourceCache, $finder, $hashContent);
 
-$rw = new ResourceWatcher($rc);
-$rw->setFinder($finder);
-
-$rw->findChanges();
-
-$rw->getNewResources()
-$rw->getDeletedResources()
-$rw->getUpdatedResources()
+$watcher->findChanges();
 
 // delete a file
 
-$rw->findChanges();
+$result = $watcher->findChanges();
 
-$rw->getDeletedResources() // array with pathname of deleted files
+$result->getDeletedResources() // array with the filename of deleted files. e.g: "/home/yosymfony/README.md"
 ```
 
-## finding changes
+## Finding changes
 
-Every time that you call `findChanges()` from `ResourceWatcher` you are getting the changes
-producced by your filesystem. The resources changed can be recovered with following methods:
+Every time the method `findChanges()` from the class `ResourceWatcher` is invoked,
+it returns an object type `ResourceWatcherResult` with information about the
+changes producced by the filesystem. The `ResourceWatcherResult` class has the following methods:
 
-* `getNewResources()`: Return an array with the paths of the new resources.
-* `getDeteledResources()`: Return an array with the paths of deleted resources.
-* `getUpdatedResources()`: Return an array with the paths of the updated resources.
+* `getNewFiles()`: Return an array with the paths of the new resources.
+* `getDeteledFiles()`: Return an array with the paths of deleted resources.
+* `getUpdatedFiles()`: Return an array with the paths of the updated resources.
 * `hasChanges()`: Has changes in your resources?.
-* `isSearching()`: Is searching changes in your resources?.
 
 ## Rebuild cache
 
@@ -66,7 +61,7 @@ To rebuild the resource cache uses `rebuild()` method from `ResourceWatcher`.
 You can run the unit tests with the following command:
 
 ```bash
-$ cd your-path/vendor/yosymfony/resource-watcher
+$ cd your-path/resource-watcher
 $ composer.phar install --dev
 $ phpunit
 ```

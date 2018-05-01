@@ -1,18 +1,19 @@
 <?php
 
 /*
- * This file is part of the Yosymfony\ResourceWatcher.
+ * This file is part of the Yo! Symfony Resource Watcher.
  *
  * (c) YoSymfony <http://github.com/yosymfony>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 namespace Yosymfony\ResourceWatcher\Tests;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Yosymfony\ResourceWatcher\Crc32ContentHash;
 use Yosymfony\ResourceWatcher\ResourceWatcher;
 use Yosymfony\ResourceWatcher\ResourceCacheMemory;
 
@@ -20,210 +21,132 @@ class ResourceWatcherTest extends \PHPUnit_Framework_TestCase
 {
     protected $tmpDir;
     protected $fs;
-    
+
     public function setUp()
     {
         $this->tmpDir = sys_get_temp_dir() . '/resource-watchers-tests';
         $this->fs = new Filesystem();
-        
+
         $this->fs->mkdir($this->tmpDir);
     }
-    
+
     public function tearDown()
     {
         $this->fs->remove($this->tmpDir);
     }
-    
-    public function testFirstTime()
+
+    public function testHasChangesMustReturnFalseWithColdCache()
     {
         $finder = new Finder();
         $finder->files()
             ->name('*.txt')
             ->in($this->tmpDir);
-        
-        $rc = new ResourceCacheMemory();
-        $rw = new ResourceWatcher($rc);
-        $rw->setFinder($finder);
-    
-        $this->assertCount(0, $rw->getNewResources());
-        $this->assertCount(0, $rw->getUpdatedResources());
-        $this->assertCount(0, $rw->getDeletedResources());
-        $this->assertFalse($rw->hasChanges());
+        $resourceWatcher = $this->makeResourceWatcher($finder);
+
+        $result = $resourceWatcher->findChanges();
+
+        $this->assertFalse($result->hasChanges());
     }
-    
-    public function testFirstTimeWithExistingResources()
+
+    public function testHasChangesMustReturnTrueWhenNewFile()
     {
         $finder = new Finder();
         $finder->files()
             ->name('*.txt')
             ->in($this->tmpDir);
-        
+        $resourceWatcher = $this->makeResourceWatcher($finder);
+
+        $resourceWatcher->findChanges();
         $this->fs->dumpFile($this->tmpDir . '/file1.txt', 'test');
-        
-        $rc = new ResourceCacheMemory();
-        $rw = new ResourceWatcher($rc);
-        $rw->setFinder($finder);
-    
-        $this->assertCount(0, $rw->getNewResources());
-        $this->assertCount(0, $rw->getUpdatedResources());
-        $this->assertCount(0, $rw->getDeletedResources());
-        $this->assertFalse($rw->hasChanges());
+        $result = $resourceWatcher->findChanges();
+
+        $this->assertTrue($result->hasChanges());
     }
-    
-    public function testNewResources()
+
+    public function testHasChangesMustReturnFalseAfterRebuildCache()
     {
         $finder = new Finder();
         $finder->files()
             ->name('*.txt')
             ->in($this->tmpDir);
-        
-        $rc = new ResourceCacheMemory();
-        $rw = new ResourceWatcher($rc);
-        $rw->setFinder($finder);
-        
+        $resourceWatcher = $this->makeResourceWatcher($finder);
+
+        $resourceWatcher->findChanges();
         $this->fs->dumpFile($this->tmpDir . '/file1.txt', 'test');
-        $this->fs->dumpFile($this->tmpDir . '/file2.txt', 'test');
-        $this->fs->dumpFile($this->tmpDir . '/file3.txt', 'test');
-        
-        $rw->findChanges();
-        
-        $this->assertCount(3, $rw->getNewResources());
-        $this->assertCount(0, $rw->getUpdatedResources());
-        $this->assertCount(0, $rw->getDeletedResources());
+        $resourceWatcher->rebuild();
+        $result = $resourceWatcher->findChanges();
+
+        $this->assertFalse($result->hasChanges());
     }
-    
-    public function testDeletedResources()
+
+    public function testFindChangesMustReturnANewFileWhenItIsCreated()
     {
         $finder = new Finder();
         $finder->files()
             ->name('*.txt')
             ->in($this->tmpDir);
-        
-        $rc = new ResourceCacheMemory();
-        $rw = new ResourceWatcher($rc);
-        $rw->setFinder($finder);
-        
+        $resourceWatcher = $this->makeResourceWatcher($finder);
+
+        $resourceWatcher->findChanges();
         $this->fs->dumpFile($this->tmpDir . '/file1.txt', 'test');
-        
-        $rw->findChanges();
-        
+        $result = $resourceWatcher->findChanges();
+
+        $this->assertCount(1, $result->getNewFiles());
+    }
+
+    public function testFindChangesMustReturnADeletedFileWhenItIsDeleted()
+    {
+        $finder = new Finder();
+        $finder->files()
+            ->name('*.txt')
+            ->in($this->tmpDir);
+        $resourceWatcher = $this->makeResourceWatcher($finder);
+
+        $this->fs->dumpFile($this->tmpDir . '/file1.txt', 'test');
+        $resourceWatcher->findChanges();
         $this->fs->remove($this->tmpDir . '/file1.txt');
-        
-        $rw->findChanges();
-        
-        $this->assertCount(0, $rw->getNewResources());
-        $this->assertCount(0, $rw->getUpdatedResources());
-        $this->assertCount(1, $rw->getDeletedResources());
+        $result = $resourceWatcher->findChanges();
+
+        $this->assertCount(1, $result->getDeletedFiles());
     }
-    
-    public function testUpdatedResources()
+
+    public function testFindChangesMustReturnAUpdatedFileWhenItIsModified()
     {
+        $filename = $this->tmpDir . '/file1.txt';
         $finder = new Finder();
         $finder->files()
             ->name('*.txt')
             ->in($this->tmpDir);
-        
-        $rc = new ResourceCacheMemory();
-        $rw = new ResourceWatcher($rc);
-        $rw->setFinder($finder);
-        
-        $this->fs->dumpFile($this->tmpDir . '/file1.txt', 'test');
-        
-        $rw->findChanges();
-        
-        $this->assertCount(1, $rw->getNewResources());
-        
-        $this->fs->touch($this->tmpDir . '/file1.txt', time() + 100);
-        
-        $rw->findChanges();
-        
-        $this->assertCount(0, $rw->getNewResources());
-        $this->assertCount(1, $rw->getUpdatedResources());
-        $this->assertCount(0, $rw->getDeletedResources());
+        $resourceWatcher = $this->makeResourceWatcher($finder);
+
+        $this->fs->dumpFile($filename, 'test');
+        $resourceWatcher->findChanges();
+        $this->fs->appendToFile($filename, 'update1');
+        $result = $resourceWatcher->findChanges();
+
+        $this->assertCount(1, $result->getUpdatedFiles());
     }
-    
-    public function testAllChanges()
-    {
-        $finder = new Finder();
-        $finder->files()
-            ->name('*.txt')
-            ->in($this->tmpDir);
-        
-        $rc = new ResourceCacheMemory();
-        $rw = new ResourceWatcher($rc);
-        $rw->setFinder($finder);
-        
-        $this->fs->dumpFile($this->tmpDir . '/file1.txt', 'test');
-        $this->fs->dumpFile($this->tmpDir . '/file2.txt', 'test');
-        $this->fs->dumpFile($this->tmpDir . '/file3.txt', 'test');
-        
-        $rw->findChanges();
-        
-        $newResources = $rw->getNewResources();
-        
-        $this->assertCount(3, $newResources);
-        $this->assertContains($this->tmpDir . '/file1.txt', $newResources);
-        $this->assertContains($this->tmpDir . '/file2.txt', $newResources);
-        $this->assertContains($this->tmpDir . '/file3.txt', $newResources);
-        
-        // ---
-        
-        $this->fs->touch($this->tmpDir . '/file1.txt', time() + 100);
-        $this->fs->remove($this->tmpDir . '/file2.txt');
-        
-        $rw->findChanges();
-        
-        $updatedResources = $rw->getUpdatedResources();
-        $deletedResources = $rw->getDeletedResources();
-        
-        $this->assertCount(0, $rw->getNewResources());
-        $this->assertCount(1, $updatedResources);
-        $this->assertCount(1, $deletedResources);
-        $this->assertEquals($this->tmpDir . '/file1.txt', $updatedResources[0]);
-        $this->assertEquals($this->tmpDir . '/file2.txt', $deletedResources[0]);
-    }
-    
-    public function testNewFolder()
+
+    public function testFindChangesMustReturnANewFileWhenANewDirectoryIsCreated()
     {
         $finder = new Finder();
         $finder->in($this->tmpDir);
-        
-        $rc = new ResourceCacheMemory();
-        $rw = new ResourceWatcher($rc);
-        $rw->setFinder($finder);
-        
+        $resourceWatcher = $this->makeResourceWatcher($finder);
+
+        $resourceWatcher->findChanges();
         $this->fs->mkdir($this->tmpDir . '/dir-test');
-        
-        $rw->findChanges();
-        
-        $newResources = $rw->getNewResources();
-        
-        $this->assertCount(1, $newResources);
-        $this->assertCount(0, $rw->getUpdatedResources());
-        $this->assertCount(0, $rw->getDeletedResources());
-        $this->assertEquals($this->tmpDir . '/dir-test', $newResources[0]);
+        $result = $resourceWatcher->findChanges();
+        $newFiles = $result->getNewFiles();
+
+        $this->assertCount(1, $newFiles);
+        $this->assertEquals($this->tmpDir . '/dir-test', $newFiles[0]);
     }
-    
-    public function testRebuild()
+
+    private function makeResourceWatcher(Finder $finder)
     {
-        $finder = new Finder();
-        $finder->files()
-            ->name('*.txt')
-            ->in($this->tmpDir);
-        
-        $rc = new ResourceCacheMemory();
-        $rw = new ResourceWatcher($rc);
-        $rw->setFinder($finder);
-        
-        $this->fs->dumpFile($this->tmpDir . '/file1.txt', 'test');
-        $this->fs->dumpFile($this->tmpDir . '/file2.txt', 'test');
-        $this->fs->dumpFile($this->tmpDir . '/file3.txt', 'test');
-        
-        $rw->rebuild();
-        $rw->findChanges();
-        
-        $this->assertCount(0, $rw->getNewResources());
-        $this->assertCount(0, $rw->getUpdatedResources());
-        $this->assertCount(0, $rw->getDeletedResources());
+        $cacheMemory = new ResourceCacheMemory();
+        $contentHashCrc32 = new Crc32ContentHash();
+
+        return new ResourceWatcher($cacheMemory, $finder, $contentHashCrc32);
     }
 }

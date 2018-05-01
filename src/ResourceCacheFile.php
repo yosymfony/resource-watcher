@@ -1,14 +1,14 @@
 <?php
 
 /*
- * This file is part of the Yosymfony\ResourceWatcher.
+ * This file is part of the Yo! Symfony Resource Watcher.
  *
  * (c) YoSymfony <http://github.com/yosymfony>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 namespace Yosymfony\ResourceWatcher;
 
 /**
@@ -20,18 +20,18 @@ class ResourceCacheFile extends ResourceCacheMemory
 {
     protected $filename;
     protected $hasPendingChasges = false;
-    
+
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param string $filename PHP filename
+     * @param string $filename The cache ".PHP" file. E.g: cache.php
      */
     public function __construct($filename)
     {
         $this->filename = $filename;
-        
+
         $cacheContent = $this->readCacheFile($this->filename);
-        
+
         if ($cacheContent) {
             $this->data = $cacheContent;
             $this->isInitialized = true;
@@ -39,22 +39,22 @@ class ResourceCacheFile extends ResourceCacheMemory
             $this->hasPendingChasges = true;
         }
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    public function write($resourceName, $timestamp)
+    public function write($filename, $hash)
     {
-        if ($timestamp == $this->read($resourceName)) {
+        if ($hash === $this->read($filename)) {
             return;
         }
-        
-        parent::write($resourceName, $timestamp);
-        
+
+        parent::write($filename, $hash);
+
         $this->hasPendingChasges = true;
         $this->isInitialized = true;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -63,40 +63,40 @@ class ResourceCacheFile extends ResourceCacheMemory
         if (false == $this->hasPendingChasges) {
             return;
         }
-        
+
         $content = $this->getContentFile($this->data);
-        
+
         $this->hasPendingChasges = false;
         $this->isInitialized = true;
-        
+
         if (false === @file_put_contents($this->filename, $content)) {
             throw new \RuntimeException(sprintf('Failed to write file "%s".', $this->filename));
         }
     }
-    
+
     private function readCacheFile($filename)
     {
         if (false == preg_match('#\.php$#', $filename)) {
-            throw new \InvalidArgumentException('The cache filename must ends with php extension');
+            throw new \InvalidArgumentException('The cache filename must ends with php extension.');
         }
-        
+
         if (file_exists($filename)) {
             $content = include_once($filename);
-            
+
             if (is_array($content)) {
                 return $content;
             }
         }
     }
-    
-    private function getContentFile(array $resources)
+
+    private function getContentFile(array $cacheEntries)
     {
         $data = '';
-        
-        foreach ($resources as $resourceName => $timestamp) {
-            $data .= sprintf('\'%s\'=>%s,', $resourceName, $timestamp);
+
+        foreach ($cacheEntries as $filename => $hash) {
+            $data .= sprintf('\'%s\'=>%s,', $filename, $hash);
         }
-        
+
         return "<?php\nreturn [$data];";
     }
 }
