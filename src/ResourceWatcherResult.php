@@ -14,7 +14,7 @@ namespace Yosymfony\ResourceWatcher;
 use Symfony\Component\Finder\Finder;
 
 /**
- * A Resource Watcher result with the resourced affected.
+ * A Resource Watcher result with the filesystem changes.
  *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
