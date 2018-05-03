@@ -53,7 +53,7 @@ class ResourceCachePhpFileTest extends \PHPUnit_Framework_TestCase
 
         $rc = new ResourceCachePhpFile($this->tmpDir . '/cache-file-test.php');
 
-        $this->assertCount(2, $rc->getResources());
+        $this->assertCount(2, $rc->getAll());
         $this->assertEquals(945635, $rc->read('/resource-1/file2.txt'));
     }
 

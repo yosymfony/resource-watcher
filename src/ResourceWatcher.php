@@ -117,7 +117,7 @@ class ResourceWatcher
         $this->calculateHashOfFilesFromFinder();
 
         $finderFileHashes = $this->fileHashesFromFinder;
-        $cacheFileHashes = $this->cache->getResources();
+        $cacheFileHashes = $this->cache->getAll();
 
         if (count($finderFileHashes) > count($cacheFileHashes)) {
             foreach ($finderFileHashes as $file => $hash) {

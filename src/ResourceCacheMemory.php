@@ -12,7 +12,7 @@
 namespace Yosymfony\ResourceWatcher;
 
 /**
- * Resource cache implementation using memory as a temporal store.
+ * Resource cache implementation using memory.
  *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
@@ -64,7 +64,7 @@ class ResourceCacheMemory implements ResourceCacheInterface
     /**
      * {@inheritdoc}
      */
-    public function getResources()
+    public function getAll()
     {
         return $this->data;
     }

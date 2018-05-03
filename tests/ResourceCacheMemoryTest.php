@@ -15,42 +15,72 @@ use Yosymfony\ResourceWatcher\ResourceCacheMemory;
 
 class ResourceCacheMemoryTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCreate()
+    private $cache;
+
+    public function setUp()
     {
-        $rc = new ResourceCacheMemory();
-
-        $this->assertFalse($rc->isInitialized());
-
-        $rc->save();
-
-        $this->assertTrue($rc->isInitialized());
+        $this->cache = new ResourceCacheMemory();
     }
 
-    public function testArrayResources()
+    public function testIsInitializedMustReturnFalseInTheInitialState()
     {
-        $rc = new ResourceCacheMemory();
-
-        $rc->write('/my-path/file1.txt', 2442345);
-
-        $this->assertCount(1, $rc->getResources());
+        $this->assertFalse($this->cache->isInitialized());
     }
 
-    public function testValues()
+    public function testIsInitializedMustReturnTrueAfterSave()
     {
-        $rc = new ResourceCacheMemory();
+        $this->cache->save();
 
-        $rc->write('/my-path/file1.txt', 2442345);
-        $rc->write('/my-path/file2.txt', 2442346);
+        $this->assertTrue($this->cache->isInitialized());
+    }
 
-        $this->assertEquals(2442345, $rc->read('/my-path/file1.txt'));
+    public function testGetAllMustReturnAllFilesInCache()
+    {
+        $this->cache->write('/my-path/file1.txt', '2442345');
 
-        $rc->delete('/my-path/file1.txt');
+        $this->assertCount(1, $this->cache->getAll());
+    }
 
-        $this->assertEquals('', $rc->read('/my-path/file1.txt'));
-        $this->assertCount(1, $rc->getResources());
+    public function testReadMustReturnTheHashOfTheFile()
+    {
+        $hash = 'a54ffa';
+        $this->cache->write('/my-path/file1.txt', $hash);
 
-        $rc->erase();
+        $this->assertEquals($hash, $this->cache->read('/my-path/file1.txt'));
+    }
 
-        $this->assertCount(0, $rc->getResources());
+    public function testWriteMustAddANewFile()
+    {
+        $hash = 'a54ffa';
+        $this->cache->write('/my-path/file1.txt', $hash);
+
+        $this->assertEquals($hash, $this->cache->read('/my-path/file1.txt'));
+    }
+
+    public function testWriteMustUpdateAFilePreviouslyAdded()
+    {
+        $hash = 'b54ffb';
+        $file = '/my-path/file1.txt';
+        $this->cache->write($file, 'a54ffa');
+        $this->cache->write($file, $hash);
+
+        $this->assertEquals($hash, $this->cache->read('/my-path/file1.txt'));
+    }
+
+    public function testEraseMustDeleteAllFiles()
+    {
+        $this->cache->write('/my-path/file1.txt', 'a54ffa');
+        $this->cache->erase();
+
+        $this->assertCount(0, $this->cache->getAll());
+    }
+
+    public function testDeleteMustDeleteTheFileIndicated()
+    {
+        $file = '/my-path/file1.txt';
+        $this->cache->write($file, 'a54ffa');
+        $this->cache->delete($file);
+
+        $this->assertCount(0, $this->cache->getAll());
     }
 }

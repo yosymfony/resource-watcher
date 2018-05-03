@@ -46,23 +46,29 @@ interface ResourceCacheInterface
      * Deletes a file in cache.
      *
      * @param string $filename
+     *
+     * @return void
      */
     public function delete($filename);
 
     /**
      * Erases all the elements in cache.
+     *
+     * @return void
      */
     public function erase();
 
     /**
-     * Returns an array of key-values with the file as key and the hash as value.
+     * Returns all the element in cache.
      *
-     * @return array
+     * @return array A key-value array in which the key is the filename and the value is the hash.
      */
-    public function getResources();
+    public function getAll();
 
     /**
      * Persists the cache
+     *
+     * @return void
      */
     public function save();
 }
