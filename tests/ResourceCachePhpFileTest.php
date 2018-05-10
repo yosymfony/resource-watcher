@@ -16,16 +16,18 @@ use Yosymfony\ResourceWatcher\ResourceCachePhpFile;
 
 class ResourceCachePhpFileTest extends \PHPUnit_Framework_TestCase
 {
-    private $cache;
+    private $cacheFile;
     private $tmpDir;
     private $fs;
+    private $resourceCache;
 
     public function setUp()
     {
         $this->tmpDir = sys_get_temp_dir() . '/resource-watchers-tests';
         $this->fs = new Filesystem();
         $this->fs->mkdir($this->tmpDir);
-        $this->cache = new ResourceCachePhpFile($this->tmpDir . '/cache-file-test.php');
+        $this->cacheFile = $this->tmpDir . '/cache-file-test.php';
+        $this->resourceCache = new ResourceCachePhpFile($this->cacheFile);
     }
 
     public function tearDown()
@@ -33,35 +35,35 @@ class ResourceCachePhpFileTest extends \PHPUnit_Framework_TestCase
         $this->fs->remove($this->tmpDir);
     }
 
-    public function testCreate()
+    public function testIsInitializedMustReturnFalseWhenTheCacheFileIsNotExists()
     {
-        $rc = new ResourceCachePhpFile($this->tmpDir . '/cache-file-test.php');
-
-        $this->assertFalse($rc->isInitialized());
-
-        $rc = new ResourceCachePhpFile($this->tmpDir . '/cache-file-test.php');
-        $rc->save();
-
-        $this->assertTrue($rc->isInitialized());
+        $this->assertFalse($this->resourceCache->isInitialized());
     }
 
-    public function testSaveResources()
+    public function testIsInitializedMustReturnTrueWhenTheCacheIsSavedInTheCacheFile()
     {
-        $rc = new ResourceCachePhpFile($this->tmpDir . '/cache-file-test.php');
-        $rc->write('/resource-1/file1.txt', 3455345);
-        $rc->write('/resource-1/file2.txt', 945635);
-        $rc->save();
+        $this->resourceCache->save();
 
-        $rc = new ResourceCachePhpFile($this->tmpDir . '/cache-file-test.php');
+        $this->assertTrue($this->resourceCache->isInitialized());
+    }
 
-        $this->assertCount(2, $rc->getAll());
-        $this->assertEquals(945635, $rc->read('/resource-1/file2.txt'));
+    public function testSaveMustDumpTheContentCacheInAFile()
+    {
+        $filename = 'file1.md';
+        $hash = '23998';
+        $this->resourceCache->write($filename, $hash);
+        $this->resourceCache->save();
+        $rc = new ResourceCachePhpFile($this->cacheFile);
+
+        $this->assertCount(1, $rc->getAll());
+        $this->assertEquals($hash, $rc->read($filename));
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage The cache filename must ends with the extension ".php".
      */
-    public function testNoPhpFile()
+    public function testConstructResourceCachePhpFileWithANoPhpFileMustThrownAnException()
     {
         $rc = new ResourceCachePhpFile($this->tmpDir . '/cache-file-test.txt');
     }
