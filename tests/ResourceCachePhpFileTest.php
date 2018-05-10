@@ -16,15 +16,16 @@ use Yosymfony\ResourceWatcher\ResourceCachePhpFile;
 
 class ResourceCachePhpFileTest extends \PHPUnit_Framework_TestCase
 {
-    protected $tmpDir;
-    protected $fs;
+    private $cache;
+    private $tmpDir;
+    private $fs;
 
     public function setUp()
     {
         $this->tmpDir = sys_get_temp_dir() . '/resource-watchers-tests';
         $this->fs = new Filesystem();
-
         $this->fs->mkdir($this->tmpDir);
+        $this->cache = new ResourceCachePhpFile($this->tmpDir . '/cache-file-test.php');
     }
 
     public function tearDown()

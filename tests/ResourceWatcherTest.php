@@ -24,7 +24,7 @@ class ResourceWatcherTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->tmpDir = sys_get_temp_dir() . '/resource-watchers-tests';
+        $this->tmpDir = sys_get_temp_dir() . '/resourceWatcher-tests';
         $this->fs = new Filesystem();
 
         $this->fs->mkdir($this->tmpDir);
@@ -154,6 +154,43 @@ class ResourceWatcherTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(1, $newFiles);
         $this->assertEquals($this->tmpDir . '/dir-test', $newFiles[0]);
+    }
+
+    public function testFindChangesMustUsesTheRelativePathWithTheCacheWhenEnableRelativePath()
+    {
+        $filename = 'file1.txt';
+        $file = $this->tmpDir . '/'.$filename;
+        $cacheMemory = new ResourceCacheMemory();
+        $contentHashCrc32 = new Crc32ContentHash();
+        $this->fs->dumpFile($file, 'test');
+        $finder = new Finder();
+        $finder->in($this->tmpDir);
+        $finder->files();
+
+        $resourceWatcher = new ResourceWatcher($cacheMemory, $finder, $contentHashCrc32);
+        $resourceWatcher->enableRelativePathWithCache();
+        $resourceWatcher->initialize();
+
+        $this->assertTrue(\strlen($cacheMemory->read($filename)) > 0);
+        $this->assertTrue(\strlen($cacheMemory->read($file)) == 0);
+    }
+
+    public function testFindChangesMustUsesThePathWithTheCacheWhenIsNotEnabledTheRelativePath()
+    {
+        $filename = 'file1.txt';
+        $file = $this->tmpDir . '/'.$filename;
+        $cacheMemory = new ResourceCacheMemory();
+        $contentHashCrc32 = new Crc32ContentHash();
+        $this->fs->dumpFile($file, 'test');
+        $finder = new Finder();
+        $finder->in($this->tmpDir);
+        $finder->files();
+
+        $resourceWatcher = new ResourceWatcher($cacheMemory, $finder, $contentHashCrc32);
+        $resourceWatcher->initialize();
+
+        $this->assertTrue(\strlen($cacheMemory->read($filename)) == 0);
+        $this->assertTrue(\strlen($cacheMemory->read($file)) > 0);
     }
 
     private function makeResourceWatcher(Finder $finder)

@@ -12,6 +12,7 @@
 namespace Yosymfony\ResourceWatcher;
 
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo as FinderFileInfo;
 
 /**
  * A simple resource-watcher to discover changes in the filesystem.
@@ -21,6 +22,7 @@ use Symfony\Component\Finder\Finder;
  */
 class ResourceWatcher
 {
+    private $isEnabledRelativePath = false;
     private $cache;
     private $finder;
     private $contentHash;
@@ -56,7 +58,17 @@ class ResourceWatcher
     }
 
     /**
-     * Finds all changes in the filesystem according to the finder criteria.
+     * Uses relative path with the resource cache.
+     *
+     * @return void
+     */
+    public function enableRelativePathWithCache()
+    {
+        $this->isEnabledRelativePath = true;
+    }
+
+    /**
+     * Finds all the changes in the filesystem according to the finder criteria.
      *
      * @return ResourceWatcherResult
      */
@@ -105,7 +117,8 @@ class ResourceWatcher
     {
         foreach ($this->finder as $file) {
             $filePath = $file->getPathname();
-            $this->cache->write($filePath, $this->calculateHashOfFile($filePath));
+            $filePathForCache = $this->getFilePathForCache($file);
+            $this->cache->write($filePathForCache, $this->calculateHashOfFile($filePath));
         }
     }
 
@@ -131,7 +144,7 @@ class ResourceWatcher
     }
 
     /**
-     * @param string $file asdfasdf
+     * @param string $file
      * @param string $hash
      *
      * @return void
@@ -178,7 +191,8 @@ class ResourceWatcher
 
         foreach ($this->finder as $file) {
             $filePath = $file->getPathname();
-            $pathsAndHashes[$filePath] = $this->calculateHashOfFile($filePath);
+            $filePathForCache = $this->getFilePathForCache($file);
+            $pathsAndHashes[$filePathForCache] = $this->calculateHashOfFile($filePath);
         }
 
         $this->fileHashesFromFinder = $pathsAndHashes;
@@ -192,5 +206,18 @@ class ResourceWatcher
         $fileContent = file_get_contents($filename);
 
         return $this->contentHash->hash($fileContent);
+    }
+
+    /**
+     * @return string
+     */
+    private function getFilePathForCache(FinderFileInfo $file)
+    {
+        if ($this->isEnabledRelativePath === true) {
+            return $file->getRelativePathname();
+            print "entraa!!!!\n";
+        }
+
+        return $file->getPathname();
     }
 }

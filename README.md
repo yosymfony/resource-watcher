@@ -24,8 +24,7 @@ use Yosymfony\ResourceWatcher\ResourceCachePhpFile;
 
 $finder = new Finder();
 $finder->files()
-    ->name('*.php')
-    ->depth(0)
+    ->name('*.md')
     ->in(__DIR__);
 
 $hashContent = new Crc32ContentHash();
@@ -40,7 +39,7 @@ $result = $watcher->findChanges();
 $result->getDeletedResources() // array of deleted filenames. e.g: "/home/yosymfony/README.md"
 ```
 
-## Finding changes
+### Finding changes
 
 Every time the method `findChanges()` from the class `ResourceWatcher` is invoked,
 it returns an object type `ResourceWatcherResult` with information about the
@@ -51,9 +50,19 @@ changes producced in the filesystem. The `ResourceWatcherResult` class has the f
 * `getUpdatedFiles()`: Return an array with the paths of the updated resources.
 * `hasChanges()`: Has changes in your resources?.
 
-## Rebuild cache
+### Rebuild cache
 
 To rebuild the resource cache uses `rebuild()` method from `ResourceWatcher`.
+
+### Relative paths with the resource cache
+
+Using relative paths with the resource cache is possible thanks to the
+ResourceWatcher's method `enableRelativePathWithCache`:
+
+```php
+$watcher = new ResourceWatcher($resourceCache, $finder, $hashContent);
+$watcher->enableRelativePathWithCache()
+```
 
 ## Unit tests
 
