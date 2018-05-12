@@ -41,8 +41,8 @@ $result->getDeletedResources() // array of deleted filenames. e.g: "/home/yosymf
 
 ### Finding changes
 
-Every time the method `findChanges()` from the class `ResourceWatcher` is invoked,
-it returns an object type `ResourceWatcherResult` with information about the
+Every time the method `findChanges()` of the class `ResourceWatcher` is invoked,
+it returns an object type `ResourceWatcherResult` with information about all the
 changes producced in the filesystem. The `ResourceWatcherResult` class has the following methods:
 
 * `getNewFiles()`: Return an array with the paths of the new resources.
@@ -52,7 +52,7 @@ changes producced in the filesystem. The `ResourceWatcherResult` class has the f
 
 ### Rebuild cache
 
-To rebuild the resource cache uses `rebuild()` method from `ResourceWatcher`.
+To rebuild the resource cache uses `rebuild()` method of the class `ResourceWatcher`.
 
 ### Relative paths with the resource cache
 
@@ -63,6 +63,8 @@ ResourceWatcher's method `enableRelativePathWithCache`:
 $watcher = new ResourceWatcher($resourceCache, $finder, $hashContent);
 $watcher->enableRelativePathWithCache()
 ```
+
+The `ResourceWatcherResult` object will has relative paths.
 
 ## Unit tests
 
