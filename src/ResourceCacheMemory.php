@@ -19,7 +19,7 @@ namespace Yosymfony\ResourceWatcher;
 class ResourceCacheMemory implements ResourceCacheInterface
 {
     protected $isInitialized = false;
-    protected $data = [];
+    private $data = [];
 
     /**
      * {@inheritdoc}
@@ -43,6 +43,7 @@ class ResourceCacheMemory implements ResourceCacheInterface
     public function write($filename, $hash)
     {
         $this->data[$filename] = $hash;
+        $this->isInitialized = true;
     }
 
     /**

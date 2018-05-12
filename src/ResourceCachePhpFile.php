@@ -29,15 +29,7 @@ class ResourceCachePhpFile extends ResourceCacheMemory
     public function __construct($filename)
     {
         $this->filename = $filename;
-
-        $cacheContent = $this->readCacheFile($this->filename);
-
-        if ($cacheContent) {
-            $this->data = $cacheContent;
-            $this->isInitialized = true;
-        } else {
-            $this->hasPendingChasges = true;
-        }
+        $this->warmUpCacheFromFile($this->filename);
     }
 
     /**
@@ -52,7 +44,6 @@ class ResourceCachePhpFile extends ResourceCacheMemory
         parent::write($filename, $hash);
 
         $this->hasPendingChasges = true;
-        $this->isInitialized = true;
     }
 
     /**
@@ -60,41 +51,59 @@ class ResourceCachePhpFile extends ResourceCacheMemory
      */
     public function save()
     {
-        if (false == $this->hasPendingChasges) {
+        if ($this->hasPendingChasges === false) {
             return;
         }
 
-        $content = $this->getContentFile($this->data);
+        $content = $this->composeContentCacheFile($this->getAll());
+
+        if (@file_put_contents($this->filename, $content) === false) {
+            throw new \RuntimeException(sprintf('Failed to write the cache file "%s".', $this->filename));
+        }
 
         $this->hasPendingChasges = false;
         $this->isInitialized = true;
-
-        if (false === @file_put_contents($this->filename, $content)) {
-            throw new \RuntimeException(sprintf('Failed to write the file "%s".', $this->filename));
-        }
     }
 
-    private function readCacheFile($filename)
+    /**
+     * @param string $filename
+     *
+     * @return void
+     */
+    private function warmUpCacheFromFile($filename)
     {
-        if (false == preg_match('#\.php$#', $filename)) {
+        if (preg_match('#\.php$#', $filename) == false) {
             throw new \InvalidArgumentException('The cache filename must ends with the extension ".php".');
         }
 
-        if (file_exists($filename)) {
-            $content = include_once($filename);
+        if (file_exists($filename) == false) {
+            $this->hasPendingChasges = true;
 
-            if (is_array($content)) {
-                return $content;
-            }
+            return;
         }
+
+        $fileContent = include_once($filename);
+
+        if (is_array($fileContent) == false) {
+            throw new \InvalidArgumentException('Cache file invalid format.');
+        }
+
+        foreach ($fileContent as $filename => $hash) {
+            $this->write($filename, $hash);
+        }
+
+        $this->isInitialized = true;
     }
 
-    private function getContentFile(array $cacheEntries)
+    /**
+     * @return string
+     */
+    private function composeContentCacheFile(array $cacheEntries)
     {
         $data = '';
 
         foreach ($cacheEntries as $filename => $hash) {
-            $data .= sprintf('\'%s\'=>%s,', $filename, $hash);
+            $data .= sprintf("'%s'=>'%s',", $filename, $hash);
         }
 
         return "<?php\nreturn [$data];";

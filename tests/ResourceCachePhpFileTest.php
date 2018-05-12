@@ -17,17 +17,15 @@ use Yosymfony\ResourceWatcher\ResourceCachePhpFile;
 class ResourceCachePhpFileTest extends \PHPUnit_Framework_TestCase
 {
     private $cacheFile;
-    private $tmpDir;
     private $fs;
-    private $resourceCache;
+    private $tmpDir;
 
     public function setUp()
     {
         $this->tmpDir = sys_get_temp_dir() . '/resource-watchers-tests';
+        $this->cacheFile = $this->tmpDir . '/cache-file-test.php';
         $this->fs = new Filesystem();
         $this->fs->mkdir($this->tmpDir);
-        $this->cacheFile = $this->tmpDir . '/cache-file-test.php';
-        $this->resourceCache = new ResourceCachePhpFile($this->cacheFile);
     }
 
     public function tearDown()
@@ -37,33 +35,56 @@ class ResourceCachePhpFileTest extends \PHPUnit_Framework_TestCase
 
     public function testIsInitializedMustReturnFalseWhenTheCacheFileIsNotExists()
     {
-        $this->assertFalse($this->resourceCache->isInitialized());
+        $resourceCache = new ResourceCachePhpFile($this->cacheFile);
+
+        $this->assertFalse($resourceCache->isInitialized());
     }
 
     public function testIsInitializedMustReturnTrueWhenTheCacheIsSavedInTheCacheFile()
     {
-        $this->resourceCache->save();
+        $resourceCache = new ResourceCachePhpFile($this->cacheFile);
+        $resourceCache->save();
 
-        $this->assertTrue($this->resourceCache->isInitialized());
+        $this->assertTrue($resourceCache->isInitialized());
+    }
+
+    public function testIsInitializedMustReturnTrueWhenThereIsAValidCacheFile()
+    {
+        $this->fs->dumpFile($this->cacheFile, "<?php\nreturn [];");
+        $resourceCache = new ResourceCachePhpFile($this->cacheFile);
+
+        $this->assertTrue($resourceCache->isInitialized());
     }
 
     public function testSaveMustDumpTheContentCacheInAFile()
     {
+        $resourceCache = new ResourceCachePhpFile($this->cacheFile);
         $filename = 'file1.md';
-        $hash = '23998';
-        $this->resourceCache->write($filename, $hash);
-        $this->resourceCache->save();
-        $rc = new ResourceCachePhpFile($this->cacheFile);
+        $hash = '23998C';
+        $resourceCache->write($filename, $hash);
+        $resourceCache->save();
 
-        $this->assertCount(1, $rc->getAll());
-        $this->assertEquals($hash, $rc->read($filename));
+        $fileContent = file_get_contents($this->cacheFile);
+
+        $this->assertEquals($fileContent, "<?php\nreturn ['$filename'=>'$hash',];");
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Cache file invalid format.
+     */
+    public function testConstructWithAInvalidCacheFileMustThrownAnException()
+    {
+        $this->fs->dumpFile($this->cacheFile, '');
+
+        $rc = new ResourceCachePhpFile($this->cacheFile);
     }
 
     /**
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage The cache filename must ends with the extension ".php".
      */
-    public function testConstructResourceCachePhpFileWithANoPhpFileMustThrownAnException()
+    public function testConstructWithANoPhpFileExtensionMustThrownAnException()
     {
         $rc = new ResourceCachePhpFile($this->tmpDir . '/cache-file-test.txt');
     }
