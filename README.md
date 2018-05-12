@@ -28,7 +28,7 @@ $finder->files()
     ->in(__DIR__);
 
 $hashContent = new Crc32ContentHash();
-$resourceCache = new ResourceCachePhpFile('/path-to-cache-file.php');
+$resourceCache = new ResourceCachePhpFile('/path-cache-file.php');
 $watcher = new ResourceWatcher($resourceCache, $finder, $hashContent);
 $watcher->initialize();
 
