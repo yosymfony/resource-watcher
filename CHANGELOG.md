@@ -8,6 +8,7 @@
 * [New] If the method `enableRelativePathWithCache` from the class `ResourceWatcher` is invoked,
 the resource cache will receive relative paths instead of absolute paths.
 * [Improved] The class `ResourceCacheFile` has been renamed to `ResourceCachePhpFile` to improve the readability.
+* [Improved] PhpUnit minimum version has been updated to 5.7.
 * [Delete] Deleted the method `isSearching` from the class `ResourceWatcher`.
 * [Delete] Deleted the method `setFinder` from the class `ResourceWatcher`.
 Now, the finder is passed as constructor argument.

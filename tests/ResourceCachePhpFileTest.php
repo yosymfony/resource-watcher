@@ -11,10 +11,11 @@
 
 namespace Yosymfony\ResourceWatcher\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Yosymfony\ResourceWatcher\ResourceCachePhpFile;
 
-class ResourceCachePhpFileTest extends \PHPUnit_Framework_TestCase
+class ResourceCachePhpFileTest extends TestCase
 {
     private $cacheFile;
     private $fs;

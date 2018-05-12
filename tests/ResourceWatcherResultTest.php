@@ -11,9 +11,10 @@
 
 namespace Yosymfony\ResourceWatcher\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Yosymfony\ResourceWatcher\ResourceWatcherResult;
 
-class ResourceWatcherResultTests extends \PHPUnit_Framework_TestCase
+class ResourceWatcherResultTests extends TestCase
 {
     private $newFiles;
     private $deletedFiles;

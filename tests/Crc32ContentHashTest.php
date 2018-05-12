@@ -11,9 +11,10 @@
 
 namespace Yosymfony\ResourceWatcher\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Yosymfony\ResourceWatcher\Crc32ContentHash;
 
-class Crc32ContentHashTest extends \PHPUnit_Framework_TestCase
+class Crc32ContentHashTest extends TestCase
 {
     public function testHashMustReturnTheContentDisgestWithCRC32()
     {

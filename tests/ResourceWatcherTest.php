@@ -11,13 +11,14 @@
 
 namespace Yosymfony\ResourceWatcher\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Yosymfony\ResourceWatcher\Crc32ContentHash;
 use Yosymfony\ResourceWatcher\ResourceWatcher;
 use Yosymfony\ResourceWatcher\ResourceCacheMemory;
 
-class ResourceWatcherTest extends \PHPUnit_Framework_TestCase
+class ResourceWatcherTest extends TestCase
 {
     protected $tmpDir;
     protected $fs;

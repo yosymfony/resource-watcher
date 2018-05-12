@@ -11,9 +11,10 @@
 
 namespace Yosymfony\ResourceWatcher\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Yosymfony\ResourceWatcher\ResourceCacheMemory;
 
-class ResourceCacheMemoryTest extends \PHPUnit_Framework_TestCase
+class ResourceCacheMemoryTest extends TestCase
 {
     private $cache;
 
