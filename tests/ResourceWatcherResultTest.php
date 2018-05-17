@@ -40,6 +40,14 @@ class ResourceWatcherResultTests extends TestCase
         $this->assertTrue($resourceWatcherResult->hasChanges());
     }
 
+    public function testHasBeenChanges()
+    {
+        $resourceWatcherResult = new ResourceWatcherResult($this->newFiles, [], []);
+        $resourceWatcherResult->hasChanges();
+
+        $this->assertTrue($resourceWatcherResult->hasChanges());
+    }
+
     public function testHasChangesMustReturnTrueWhenExistsDeletedFiles()
     {
         $resourceWatcherResult = new ResourceWatcherResult([], $this->deletedFiles, []);
