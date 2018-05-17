@@ -70,6 +70,40 @@ class ResourceCachePhpFileTest extends TestCase
         $this->assertEquals($fileContent, "<?php\nreturn ['$filename'=>'$hash',];");
     }
 
+    public function testSaveShouldReturnNull()
+    {
+        $resourceCache = new ResourceCachePhpFile($this->cacheFile);
+        $filename = 'file1.md';
+        $hash = '23998C';
+        $resourceCache->write($filename, $hash);
+        $resourceCache->save();
+
+        $this->assertNull($resourceCache->save());
+    }
+
+    /**
+     * @expectedException RuntimeException
+     * @expectedExceptionMessage Failed to write the cache file "/invalid_file.php".
+     */
+    public function testSaveShouldThrowRuntimeException()
+    {
+        $resourceCache = new ResourceCachePhpFile('/invalid_file.php');
+        $filename = '/file1.md';
+        $hash = '23998C';
+        $resourceCache->save();
+    }
+
+    public function testWriteShouldReturnNull()
+    {
+        $resourceCache = new ResourceCachePhpFile($this->cacheFile);
+        $filename = 'file1.md';
+        $hash = '23998C';
+        $resourceCache->write($filename, $hash);
+        $resourceCache->save();
+
+        $this->assertNull($resourceCache->write($filename, $hash));
+    }
+
     /**
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Cache file invalid format.
