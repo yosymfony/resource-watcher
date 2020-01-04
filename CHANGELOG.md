@@ -1,5 +1,9 @@
-2.0.0
------
+# Changelog
+## 2.0.1
+[New] Support for Symfony 5. (Thanks to seregazhuk. See PR #8).
+[Fix] Fixed an error calculating the hash of a directory in PHP 7.4.
+
+## 2.0.0
 * [New] The class `ResourceWatcher` accepts two new arguments: the finder and class that makes the content hash.
 * [New] The class `ResourceWatcher` uses content hash instead of timestamps to detect changes.
 * [New] The method `findChanges` from the class `ResourceWatcher` returns an object type `ResourceWatcherResult` with all the information about files changes.
