@@ -203,7 +203,11 @@ class ResourceWatcher
      */
     private function calculateHashOfFile($filename)
     {
-        $fileContent = file_get_contents($filename);
+        $fileContent = $filename;
+
+        if (!\is_dir($filename)) {
+            $fileContent = file_get_contents($filename);
+        }
 
         return $this->contentHash->hash($fileContent);
     }
