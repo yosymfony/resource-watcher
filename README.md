@@ -45,10 +45,10 @@ Every time the method `findChanges()` of the class `ResourceWatcher` is invoked,
 it returns an object type `ResourceWatcherResult` with information about all the
 changes producced in the filesystem. The `ResourceWatcherResult` class has the following methods:
 
-* `getNewFiles()`: Return an array with the paths of the new resources.
-* `getDeteledFiles()`: Return an array with the paths of deleted resources.
-* `getUpdatedFiles()`: Return an array with the paths of the updated resources.
-* `hasChanges()`: Has changes in your resources?.
+* `getNewFiles()`: Returns an array with the paths of the new resources.
+* `getDeteledFiles()`: Returns an array with the paths of deleted resources.
+* `getUpdatedFiles()`: Returns an array with the paths of the updated resources.
+* `hasChanges()`: Are they changes in your resources?.
 
 ### Rebuild cache
 
@@ -71,7 +71,5 @@ The `ResourceWatcherResult` object will has relative paths.
 You can run the unit tests with the following command:
 
 ```bash
-$ cd your-path/resource-watcher
-$ composer.phar install
-$ phpunit
+$ composer test
 ```
