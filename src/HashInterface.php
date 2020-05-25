@@ -12,23 +12,18 @@
 namespace Yosymfony\ResourceWatcher;
 
 /**
- * CRC32 content hash implementation.
+ * Interface for hashing a file.
  *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
-class Crc32ContentHash implements HashInterface
+interface HashInterface
 {
     /**
-     * {@inheritdoc}
+     * Calculates the hash of a file.
+     *
+     * @param string $filepath
+     *
+     * @return string Returns a string containing the calculated message digest.
      */
-    public function hash($filepath)
-    {
-        $fileContent = $filepath;
-
-        if (!\is_dir($filepath)) {
-            $fileContent = file_get_contents($filepath);
-        }
-
-        return hash('crc32', $fileContent);
-    }
+    public function hash($filepath);
 }

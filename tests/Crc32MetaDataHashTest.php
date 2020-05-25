@@ -12,20 +12,20 @@
 namespace Yosymfony\ResourceWatcher\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Yosymfony\ResourceWatcher\Crc32ContentHash;
+use Yosymfony\ResourceWatcher\Crc32MetaDataHash;
 
-class Crc32ContentHashTest extends TestCase
+class Crc32MetaDataHashTest extends TestCase
 {
-    public function testHashMustReturnTheContentDisgestWithCRC32()
+    public function testHashMustReturnTheMetaDataDigestWithCRC32()
     {
         $filepath = __DIR__ . '/test.txt';
 
-        file_put_contents($filepath, 'acme');
+        touch($filepath, strtotime('2020-05-25 17:42'));
 
-        $crc32ContentHash = new Crc32ContentHash();
+        $crc32ContentHash = new Crc32MetaDataHash();
         $currentValue = $crc32ContentHash->hash($filepath);
 
-        $this->assertEquals('8f7ecb57', $currentValue);
+        $this->assertEquals('f91b448c', $currentValue);
 
         unlink($filepath);
     }

@@ -50,6 +50,11 @@ changes producced in the filesystem. The `ResourceWatcherResult` class has the f
 * `getUpdatedFiles()`: Returns an array with the paths of the updated resources.
 * `hasChanges()`: Are they changes in your resources?.
 
+### Hashing alternatives
+Two hashing classes are included in the package: 
+* `Yosymfony\ResourceWatcher\Crc32ContentHash`, which hashes the content of the file
+* `Yosymfony\ResourceWatcher\Crc32MetaDataHash`, which hashes the filename and its last modified timestamp
+
 ### Rebuild cache
 
 To rebuild the resource cache uses `rebuild()` method of the class `ResourceWatcher`.
