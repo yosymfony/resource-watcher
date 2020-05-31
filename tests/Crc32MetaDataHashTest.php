@@ -25,7 +25,7 @@ class Crc32MetaDataHashTest extends TestCase
         $crc32ContentHash = new Crc32MetaDataHash();
         $currentValue = $crc32ContentHash->hash($filepath);
 
-        $this->assertEquals('f91b448c', $currentValue);
+        $this->assertEquals('0b93d57a', $currentValue);
 
         unlink($filepath);
     }

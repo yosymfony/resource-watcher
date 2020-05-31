@@ -18,17 +18,31 @@ namespace Yosymfony\ResourceWatcher;
  */
 class Crc32MetaDataHash implements HashInterface
 {
+    /** @var bool */
+    protected $clearStatCache;
+
+    /**
+     * Assign option to clear the file stat() cache.
+     * @param bool $clearStatCache
+     */
+    public function __construct($clearStatCache = false)
+    {
+        $this->clearStatCache = $clearStatCache;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function hash($filepath)
     {
-        $name = basename($filepath);
+        if ($this->clearStatCache) {
+            clearstatcache(true, $filepath);
+        }
 
-        $time = !is_dir($filepath)
-            ? filemtime($filepath)
-            : filemtime(rtrim($filepath . '/') . '/.');;
+        $data = stat($filepath);
 
-        return hash('crc32', $name . $time);
+        $str = basename($filepath) . $data['size'] . $data['mtime'] . $data['mode'];
+
+        return hash('crc32', $str);
     }
 }
