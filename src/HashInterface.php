@@ -12,18 +12,18 @@
 namespace Yosymfony\ResourceWatcher;
 
 /**
- * Interface for hashing content.
+ * Interface for hashing a file.
  *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
-interface ContentHashInterface
+interface HashInterface
 {
     /**
-     * Calculates the hash of the content.
+     * Calculates the hash of a file.
      *
-     * @param string $content  Message to be hashed.
+     * @param string $filepath
      *
      * @return string Returns a string containing the calculated message digest.
      */
-    public function hash($content);
+    public function hash($filepath);
 }

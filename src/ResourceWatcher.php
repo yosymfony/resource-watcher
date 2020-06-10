@@ -25,7 +25,7 @@ class ResourceWatcher
     private $isEnabledRelativePath = false;
     private $cache;
     private $finder;
-    private $contentHash;
+    private $hasher;
     private $fileHashesFromFinder = [];
     private $newFiles = [];
     private $deletedFiles = [];
@@ -36,13 +36,13 @@ class ResourceWatcher
      *
      * @param ResourceCacheInterface $resourceCache The cache.
      * @param Finder $finder The Symfony Finder.
-     * @param ContentHashInterface $contentHash The file hash strategy.
+     * @param HashInterface $hasher The file hash strategy.
      */
-    public function __construct(ResourceCacheInterface $resourceCache, Finder $finder, ContentHashInterface $contentHash)
+    public function __construct(ResourceCacheInterface $resourceCache, Finder $finder, HashInterface $hasher)
     {
         $this->cache = $resourceCache;
         $this->finder = $finder;
-        $this->contentHash = $contentHash;
+        $this->hasher = $hasher;
     }
 
     /**
@@ -199,27 +199,22 @@ class ResourceWatcher
     }
 
     /**
+     * @param $filename
      * @return string
      */
     private function calculateHashOfFile($filename)
     {
-        $fileContent = $filename;
-
-        if (!\is_dir($filename)) {
-            $fileContent = file_get_contents($filename);
-        }
-
-        return $this->contentHash->hash($fileContent);
+        return $this->hasher->hash($filename);
     }
 
     /**
+     * @param FinderFileInfo $file
      * @return string
      */
     private function getFilePathForCache(FinderFileInfo $file)
     {
         if ($this->isEnabledRelativePath === true) {
             return $file->getRelativePathname();
-            print "entraa!!!!\n";
         }
 
         return $file->getPathname();

@@ -16,13 +16,19 @@ namespace Yosymfony\ResourceWatcher;
  *
  * @author Victor Puertas <vpgugr@gmail.com>
  */
-class Crc32ContentHash implements ContentHashInterface
+class Crc32ContentHash implements HashInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function hash($content)
+    public function hash($filepath)
     {
-        return hash('crc32', $content);
+        $fileContent = $filepath;
+
+        if (!\is_dir($filepath)) {
+            $fileContent = file_get_contents($filepath);
+        }
+
+        return hash('crc32', $fileContent);
     }
 }
