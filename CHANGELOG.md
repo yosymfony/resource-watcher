@@ -1,4 +1,11 @@
 # Changelog
+## 3.0.0
+[New] A new hashing class has been added `Crc32MetaDataHash`. It let you work with
+large files as the hash is calculated using metadata of files: filename, size, mtime and mode.
+(Thanks to @pecuchet. See PR #9).
+[New] The interface `ContentHashInterface` has been renamed to `HashInterface`. Now,
+the method `hash` receives a filename instead of the filename content.
+
 ## 2.0.1
 [New] Support for Symfony 5. (Thanks to seregazhuk. See PR #8).
 [Fix] Fixed an error calculating the hash of a directory in PHP 7.4.
