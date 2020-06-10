@@ -18,7 +18,7 @@ class Crc32MetaDataHashTest extends TestCase
 {
     public function testHashMustReturnTheMetaDataDigestWithCRC32()
     {
-        $filepath = __DIR__ . '/test.txt';
+        $filepath = sys_get_temp_dir() . '/test.txt';
 
         touch($filepath, strtotime('2020-05-25 17:42'));
 

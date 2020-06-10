@@ -18,7 +18,7 @@ class Crc32ContentHashTest extends TestCase
 {
     public function testHashMustReturnTheContentDisgestWithCRC32()
     {
-        $filepath = __DIR__ . '/test.txt';
+        $filepath = sys_get_temp_dir() . '/test.txt';
 
         file_put_contents($filepath, 'acme');
 

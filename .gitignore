@@ -3,4 +3,3 @@ composer.lock
 phpunit.xml
 .php_cs.cache
 .idea
-tests/test.txt
