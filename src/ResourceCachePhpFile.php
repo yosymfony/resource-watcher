@@ -82,7 +82,7 @@ class ResourceCachePhpFile extends ResourceCacheMemory
             return;
         }
 
-        $fileContent = include_once($filename);
+        $fileContent = include($filename);
 
         if (is_array($fileContent) == false) {
             throw new \InvalidArgumentException('Cache file invalid format.');
