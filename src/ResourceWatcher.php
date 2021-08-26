@@ -214,7 +214,7 @@ class ResourceWatcher
     private function getFilePathForCache(FinderFileInfo $file)
     {
         if ($this->isEnabledRelativePath === true) {
-            return $file->getRelativePathname();
+            return addslashes($file->getRelativePathname());
         }
 
         return $file->getPathname();
