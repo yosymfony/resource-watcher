@@ -18,7 +18,7 @@ class ResourceCacheMemoryTest extends TestCase
 {
     private $cache;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->cache = new ResourceCacheMemory();
     }

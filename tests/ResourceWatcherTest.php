@@ -23,7 +23,7 @@ class ResourceWatcherTest extends TestCase
     protected $tmpDir;
     protected $fs;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->tmpDir = sys_get_temp_dir() . '/resourceWatcher-tests';
         $this->fs = new Filesystem();
@@ -31,7 +31,7 @@ class ResourceWatcherTest extends TestCase
         $this->fs->mkdir($this->tmpDir);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->fs->remove($this->tmpDir);
     }

@@ -21,7 +21,7 @@ class ResourceCachePhpFileTest extends TestCase
     private $fs;
     private $tmpDir;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->tmpDir = sys_get_temp_dir() . '/resource-watchers-tests';
         $this->cacheFile = $this->tmpDir . '/cache-file-test.php';
@@ -29,7 +29,7 @@ class ResourceCachePhpFileTest extends TestCase
         $this->fs->mkdir($this->tmpDir);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->fs->remove($this->tmpDir);
     }
@@ -70,23 +70,19 @@ class ResourceCachePhpFileTest extends TestCase
         $this->assertEquals($fileContent, "<?php\nreturn ['$filename'=>'$hash',];");
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Cache file invalid format.
-     */
     public function testConstructWithAInvalidCacheFileMustThrownAnException()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cache file invalid format.');
         $this->fs->dumpFile($this->cacheFile, '');
 
         $rc = new ResourceCachePhpFile($this->cacheFile);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage The cache filename must ends with the extension ".php".
-     */
     public function testConstructWithANoPhpFileExtensionMustThrownAnException()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The cache filename must ends with the extension ".php".');
         $rc = new ResourceCachePhpFile($this->tmpDir . '/cache-file-test.txt');
     }
 }

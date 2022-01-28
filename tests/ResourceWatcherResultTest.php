@@ -21,7 +21,7 @@ class ResourceWatcherResultTests extends TestCase
     private $updatedFiles;
     private $resourceWatcherResult;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->newFiles = ['/my-path/newfile.txt'];
         $this->deletedFiles = ['/my-path/deletedfile.txt'];
