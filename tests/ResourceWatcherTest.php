@@ -136,7 +136,7 @@ class ResourceWatcherTest extends TestCase
 
         $this->fs->dumpFile($filename, 'test');
         $resourceWatcher->findChanges();
-        $this->fs->appendToFile($filename, 'update1');
+        @file_put_contents($filename, 'update1', \FILE_APPEND);
         $result = $resourceWatcher->findChanges();
 
         $this->assertCount(1, $result->getUpdatedFiles());
