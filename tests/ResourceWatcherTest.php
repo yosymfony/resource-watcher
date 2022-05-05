@@ -194,7 +194,7 @@ class ResourceWatcherTest extends TestCase
         $this->assertTrue(\strlen($cacheMemory->read($file)) > 0);
     }
 
-    private function makeResourceWatcher(Finder $finder)
+    protected function makeResourceWatcher(Finder $finder)
     {
         $cacheMemory = new ResourceCacheMemory();
         $contentHashCrc32 = new Crc32ContentHash();
