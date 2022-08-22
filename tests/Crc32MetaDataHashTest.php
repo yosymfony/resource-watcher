@@ -16,7 +16,7 @@ use Yosymfony\ResourceWatcher\Crc32MetaDataHash;
 
 class Crc32MetaDataHashTest extends TestCase
 {
-    public function testHashMustReturnTheMetaDataDigestWithCRC32()
+    public function testHashMustReturnTheMetaDataDigestWithCRC32(): void
     {
         $filepath = sys_get_temp_dir() . '/test.txt';
 

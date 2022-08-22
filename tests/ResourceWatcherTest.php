@@ -23,7 +23,7 @@ class ResourceWatcherTest extends TestCase
     protected $tmpDir;
     protected $fs;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->tmpDir = sys_get_temp_dir() . '/resourceWatcher-tests';
         $this->fs = new Filesystem();
@@ -31,12 +31,12 @@ class ResourceWatcherTest extends TestCase
         $this->fs->mkdir($this->tmpDir);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->fs->remove($this->tmpDir);
     }
 
-    public function testInitializeMustWarmUpTheCacheInCaseItIsCold()
+    public function testInitializeMustWarmUpTheCacheInCaseItIsCold(): void
     {
         $finder = new Finder();
         $finder->files()
@@ -50,7 +50,7 @@ class ResourceWatcherTest extends TestCase
         $this->assertTrue($cacheMemory->isInitialized());
     }
 
-    public function testHasChangesMustReturnFalseWithColdCache()
+    public function testHasChangesMustReturnFalseWithColdCache(): void
     {
         $finder = new Finder();
         $finder->files()
@@ -63,7 +63,7 @@ class ResourceWatcherTest extends TestCase
         $this->assertFalse($result->hasChanges());
     }
 
-    public function testHasChangesMustReturnTrueWhenNewFile()
+    public function testHasChangesMustReturnTrueWhenNewFile(): void
     {
         $finder = new Finder();
         $finder->files()
@@ -78,7 +78,7 @@ class ResourceWatcherTest extends TestCase
         $this->assertTrue($result->hasChanges());
     }
 
-    public function testHasChangesMustReturnFalseAfterRebuildCache()
+    public function testHasChangesMustReturnFalseAfterRebuildCache(): void
     {
         $finder = new Finder();
         $finder->files()
@@ -94,7 +94,7 @@ class ResourceWatcherTest extends TestCase
         $this->assertFalse($result->hasChanges());
     }
 
-    public function testFindChangesMustReturnANewFileWhenItIsCreated()
+    public function testFindChangesMustReturnANewFileWhenItIsCreated(): void
     {
         $finder = new Finder();
         $finder->files()
@@ -109,7 +109,7 @@ class ResourceWatcherTest extends TestCase
         $this->assertCount(1, $result->getNewFiles());
     }
 
-    public function testFindChangesMustReturnADeletedFileWhenItIsDeleted()
+    public function testFindChangesMustReturnADeletedFileWhenItIsDeleted(): void
     {
         $finder = new Finder();
         $finder->files()
@@ -125,7 +125,7 @@ class ResourceWatcherTest extends TestCase
         $this->assertCount(1, $result->getDeletedFiles());
     }
 
-    public function testFindChangesMustReturnAUpdatedFileWhenItIsModified()
+    public function testFindChangesMustReturnAUpdatedFileWhenItIsModified(): void
     {
         $filename = $this->tmpDir . '/file1.txt';
         $finder = new Finder();
@@ -142,7 +142,7 @@ class ResourceWatcherTest extends TestCase
         $this->assertCount(1, $result->getUpdatedFiles());
     }
 
-    public function testFindChangesMustReturnANewFileWhenANewDirectoryIsCreated()
+    public function testFindChangesMustReturnANewFileWhenANewDirectoryIsCreated(): void
     {
         $finder = new Finder();
         $finder->in($this->tmpDir);
@@ -157,10 +157,10 @@ class ResourceWatcherTest extends TestCase
         $this->assertEquals($this->tmpDir . '/dir-test', $newFiles[0]);
     }
 
-    public function testFindChangesMustUsesTheRelativePathWithTheCacheWhenEnableRelativePath()
+    public function testFindChangesMustUsesTheRelativePathWithTheCacheWhenEnableRelativePath(): void
     {
         $filename = 'file1.txt';
-        $file = $this->tmpDir . '/'.$filename;
+        $file = $this->tmpDir . '/' . $filename;
         $cacheMemory = new ResourceCacheMemory();
         $contentHashCrc32 = new Crc32ContentHash();
         $this->fs->dumpFile($file, 'test');
@@ -176,10 +176,10 @@ class ResourceWatcherTest extends TestCase
         $this->assertTrue(\strlen($cacheMemory->read($file)) == 0);
     }
 
-    public function testFindChangesMustUsesThePathWithTheCacheWhenIsNotEnabledTheRelativePath()
+    public function testFindChangesMustUsesThePathWithTheCacheWhenIsNotEnabledTheRelativePath(): void
     {
         $filename = 'file1.txt';
-        $file = $this->tmpDir . '/'.$filename;
+        $file = $this->tmpDir . '/' . $filename;
         $cacheMemory = new ResourceCacheMemory();
         $contentHashCrc32 = new Crc32ContentHash();
         $this->fs->dumpFile($file, 'test');
@@ -194,7 +194,7 @@ class ResourceWatcherTest extends TestCase
         $this->assertTrue(\strlen($cacheMemory->read($file)) > 0);
     }
 
-    private function makeResourceWatcher(Finder $finder)
+    private function makeResourceWatcher(Finder $finder): ResourceWatcher
     {
         $cacheMemory = new ResourceCacheMemory();
         $contentHashCrc32 = new Crc32ContentHash();

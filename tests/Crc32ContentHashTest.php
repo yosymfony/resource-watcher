@@ -16,7 +16,7 @@ use Yosymfony\ResourceWatcher\Crc32ContentHash;
 
 class Crc32ContentHashTest extends TestCase
 {
-    public function testHashMustReturnTheContentDisgestWithCRC32()
+    public function testHashMustReturnTheContentDisgestWithCRC32(): void
     {
         $filepath = sys_get_temp_dir() . '/test.txt';
 

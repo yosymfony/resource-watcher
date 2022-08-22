@@ -18,31 +18,31 @@ class ResourceCacheMemoryTest extends TestCase
 {
     private $cache;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->cache = new ResourceCacheMemory();
     }
 
-    public function testIsInitializedMustReturnFalseInTheInitialState()
+    public function testIsInitializedMustReturnFalseInTheInitialState(): void
     {
         $this->assertFalse($this->cache->isInitialized());
     }
 
-    public function testIsInitializedMustReturnTrueAfterSave()
+    public function testIsInitializedMustReturnTrueAfterSave(): void
     {
         $this->cache->save();
 
         $this->assertTrue($this->cache->isInitialized());
     }
 
-    public function testGetAllMustReturnAllFilesInCache()
+    public function testGetAllMustReturnAllFilesInCache(): void
     {
         $this->cache->write('/my-path/file1.txt', '2442345');
 
         $this->assertCount(1, $this->cache->getAll());
     }
 
-    public function testReadMustReturnTheHashOfTheFile()
+    public function testReadMustReturnTheHashOfTheFile(): void
     {
         $hash = 'a54ffa';
         $this->cache->write('/my-path/file1.txt', $hash);
@@ -50,7 +50,7 @@ class ResourceCacheMemoryTest extends TestCase
         $this->assertEquals($hash, $this->cache->read('/my-path/file1.txt'));
     }
 
-    public function testWriteMustAddANewFile()
+    public function testWriteMustAddANewFile(): void
     {
         $hash = 'a54ffa';
         $this->cache->write('/my-path/file1.txt', $hash);
@@ -58,7 +58,7 @@ class ResourceCacheMemoryTest extends TestCase
         $this->assertEquals($hash, $this->cache->read('/my-path/file1.txt'));
     }
 
-    public function testWriteMustUpdateAFilePreviouslyAdded()
+    public function testWriteMustUpdateAFilePreviouslyAdded(): void
     {
         $hash = 'b54ffb';
         $file = '/my-path/file1.txt';
@@ -68,7 +68,7 @@ class ResourceCacheMemoryTest extends TestCase
         $this->assertEquals($hash, $this->cache->read('/my-path/file1.txt'));
     }
 
-    public function testEraseMustDeleteAllFiles()
+    public function testEraseMustDeleteAllFiles(): void
     {
         $this->cache->write('/my-path/file1.txt', 'a54ffa');
         $this->cache->erase();
@@ -76,7 +76,7 @@ class ResourceCacheMemoryTest extends TestCase
         $this->assertCount(0, $this->cache->getAll());
     }
 
-    public function testDeleteMustDeleteTheFileIndicated()
+    public function testDeleteMustDeleteTheFileIndicated(): void
     {
         $file = '/my-path/file1.txt';
         $this->cache->write($file, 'a54ffa');

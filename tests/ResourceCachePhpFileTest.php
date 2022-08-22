@@ -21,7 +21,7 @@ class ResourceCachePhpFileTest extends TestCase
     private $fs;
     private $tmpDir;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->tmpDir = sys_get_temp_dir() . '/resource-watchers-tests';
         $this->cacheFile = $this->tmpDir . '/cache-file-test.php';
@@ -29,19 +29,19 @@ class ResourceCachePhpFileTest extends TestCase
         $this->fs->mkdir($this->tmpDir);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->fs->remove($this->tmpDir);
     }
 
-    public function testIsInitializedMustReturnFalseWhenTheCacheFileIsNotExists()
+    public function testIsInitializedMustReturnFalseWhenTheCacheFileIsNotExists(): void
     {
         $resourceCache = new ResourceCachePhpFile($this->cacheFile);
 
         $this->assertFalse($resourceCache->isInitialized());
     }
 
-    public function testIsInitializedMustReturnTrueWhenTheCacheIsSavedInTheCacheFile()
+    public function testIsInitializedMustReturnTrueWhenTheCacheIsSavedInTheCacheFile(): void
     {
         $resourceCache = new ResourceCachePhpFile($this->cacheFile);
         $resourceCache->save();
@@ -49,7 +49,7 @@ class ResourceCachePhpFileTest extends TestCase
         $this->assertTrue($resourceCache->isInitialized());
     }
 
-    public function testIsInitializedMustReturnTrueWhenThereIsAValidCacheFile()
+    public function testIsInitializedMustReturnTrueWhenThereIsAValidCacheFile(): void
     {
         $this->fs->dumpFile($this->cacheFile, "<?php\nreturn [];");
         $resourceCache = new ResourceCachePhpFile($this->cacheFile);
@@ -57,7 +57,7 @@ class ResourceCachePhpFileTest extends TestCase
         $this->assertTrue($resourceCache->isInitialized());
     }
 
-    public function testSaveMustDumpTheContentCacheInAFile()
+    public function testSaveMustDumpTheContentCacheInAFile(): void
     {
         $resourceCache = new ResourceCachePhpFile($this->cacheFile);
         $filename = 'file1.md';
@@ -74,7 +74,7 @@ class ResourceCachePhpFileTest extends TestCase
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Cache file invalid format.
      */
-    public function testConstructWithAInvalidCacheFileMustThrownAnException()
+    public function testConstructWithAInvalidCacheFileMustThrownAnException(): void
     {
         $this->fs->dumpFile($this->cacheFile, '');
 
@@ -85,7 +85,7 @@ class ResourceCachePhpFileTest extends TestCase
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage The cache filename must ends with the extension ".php".
      */
-    public function testConstructWithANoPhpFileExtensionMustThrownAnException()
+    public function testConstructWithANoPhpFileExtensionMustThrownAnException(): void
     {
         $rc = new ResourceCachePhpFile($this->tmpDir . '/cache-file-test.txt');
     }

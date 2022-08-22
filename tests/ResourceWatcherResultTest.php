@@ -21,7 +21,7 @@ class ResourceWatcherResultTests extends TestCase
     private $updatedFiles;
     private $resourceWatcherResult;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->newFiles = ['/my-path/newfile.txt'];
         $this->deletedFiles = ['/my-path/deletedfile.txt'];
@@ -33,49 +33,49 @@ class ResourceWatcherResultTests extends TestCase
         );
     }
 
-    public function testHasChangesMustReturnTrueWhenExistsNewFiles()
+    public function testHasChangesMustReturnTrueWhenExistsNewFiles(): void
     {
         $resourceWatcherResult = new ResourceWatcherResult($this->newFiles, [], []);
 
         $this->assertTrue($resourceWatcherResult->hasChanges());
     }
 
-    public function testHasChangesMustReturnTrueWhenExistsDeletedFiles()
+    public function testHasChangesMustReturnTrueWhenExistsDeletedFiles(): void
     {
         $resourceWatcherResult = new ResourceWatcherResult([], $this->deletedFiles, []);
 
         $this->assertTrue($resourceWatcherResult->hasChanges());
     }
 
-    public function testHasChangesMustReturnTrueWhenExistsUpdatedFiles()
+    public function testHasChangesMustReturnTrueWhenExistsUpdatedFiles(): void
     {
         $resourceWatcherResult = new ResourceWatcherResult([], [], $this->updatedFiles);
 
         $this->assertTrue($resourceWatcherResult->hasChanges());
     }
 
-    public function testHasChangesMustReturnFalseWhenDoesNotExistsChanges()
+    public function testHasChangesMustReturnFalseWhenDoesNotExistsChanges(): void
     {
         $resourceWatcherResult = new ResourceWatcherResult([], [], []);
 
         $this->assertFalse($resourceWatcherResult->hasChanges());
     }
 
-    public function testGetNewFilesMustReturnTheNewFiles()
+    public function testGetNewFilesMustReturnTheNewFiles(): void
     {
         $files = $this->resourceWatcherResult->getNewFiles();
         $this->assertCount(1, $files);
         $this->assertEquals('/my-path/newfile.txt', $files[0]);
     }
 
-    public function testGetDeletedFilesMustReturnTheDeletedFiles()
+    public function testGetDeletedFilesMustReturnTheDeletedFiles(): void
     {
         $files = $this->resourceWatcherResult->getDeletedFiles();
         $this->assertCount(1, $files);
         $this->assertEquals('/my-path/deletedfile.txt', $files[0]);
     }
 
-    public function testGetUpdatedFilesMustReturnTheDeletedFiles()
+    public function testGetUpdatedFilesMustReturnTheDeletedFiles(): void
     {
         $files = $this->resourceWatcherResult->getUpdatedFiles();
         $this->assertCount(1, $files);
