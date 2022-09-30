@@ -1,7 +1,12 @@
 {
-    "name":"yosymfony/resource-watcher",
+    "name": "yosymfony/resource-watcher",
     "description": "A simple resource watcher using Symfony Finder",
-    "keywords": ["resources","watcher","finder","symfony"],
+    "keywords": [
+        "resources",
+        "watcher",
+        "finder",
+        "symfony"
+    ],
     "license": "MIT",
     "homepage": "http://yosymfony.com",
     "authors": [
@@ -11,12 +16,12 @@
         }
     ],
     "require": {
-        "php": ">=5.6",
-        "symfony/finder": "^2.7|^3.0|^4.0|^5.0"
+        "php": ">=7.4",
+        "symfony/finder": "^2.7|^3.0|^4.0|^5.0|^6.0"
     },
     "require-dev": {
         "symfony/filesystem": "^2.7|^3.0|^4.0|^5.0",
-        "phpunit/phpunit": "^5.7"
+        "phpunit/phpunit": "^9.0"
     },
     "autoload": {
         "psr-4": {

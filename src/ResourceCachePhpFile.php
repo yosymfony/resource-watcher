@@ -11,6 +11,8 @@
 
 namespace Yosymfony\ResourceWatcher;
 
+use InvalidArgumentException;
+
 /**
  * Resource cache implementation using a PHP file with an array.
  *
@@ -73,7 +75,7 @@ class ResourceCachePhpFile extends ResourceCacheMemory
     private function warmUpCacheFromFile($filename)
     {
         if (preg_match('#\.php$#', $filename) == false) {
-            throw new \InvalidArgumentException('The cache filename must ends with the extension ".php".');
+            throw new InvalidArgumentException('The cache filename must ends with the extension ".php".');
         }
 
         if (file_exists($filename) == false) {
@@ -84,8 +86,8 @@ class ResourceCachePhpFile extends ResourceCacheMemory
 
         $fileContent = include($filename);
 
-        if (is_array($fileContent) == false) {
-            throw new \InvalidArgumentException('Cache file invalid format.');
+        if (is_array($fileContent) === false) {
+            throw new InvalidArgumentException('Cache file invalid format.');
         }
 
         foreach ($fileContent as $filename => $hash) {

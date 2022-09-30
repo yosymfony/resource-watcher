@@ -11,6 +11,7 @@
 
 namespace Yosymfony\ResourceWatcher\Tests;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Yosymfony\ResourceWatcher\ResourceCachePhpFile;
@@ -21,7 +22,7 @@ class ResourceCachePhpFileTest extends TestCase
     private $fs;
     private $tmpDir;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->tmpDir = sys_get_temp_dir() . '/resource-watchers-tests';
         $this->cacheFile = $this->tmpDir . '/cache-file-test.php';
@@ -29,7 +30,7 @@ class ResourceCachePhpFileTest extends TestCase
         $this->fs->mkdir($this->tmpDir);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->fs->remove($this->tmpDir);
     }
@@ -78,6 +79,8 @@ class ResourceCachePhpFileTest extends TestCase
     {
         $this->fs->dumpFile($this->cacheFile, '');
 
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cache file invalid format.');
         $rc = new ResourceCachePhpFile($this->cacheFile);
     }
 
@@ -87,6 +90,9 @@ class ResourceCachePhpFileTest extends TestCase
      */
     public function testConstructWithANoPhpFileExtensionMustThrownAnException()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The cache filename must ends with the extension ".php".');
+
         $rc = new ResourceCachePhpFile($this->tmpDir . '/cache-file-test.txt');
     }
 }
