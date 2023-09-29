@@ -36,7 +36,7 @@ $watcher->initialize();
 
 $result = $watcher->findChanges();
 
-$result->getDeletedResources() // array of deleted filenames. e.g: "/home/yosymfony/README.md"
+$result->getDeletedFiles(); // array of deleted filenames. e.g: "/home/yosymfony/README.md"
 ```
 
 ### Finding changes
